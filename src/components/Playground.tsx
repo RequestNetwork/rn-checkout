@@ -206,7 +206,7 @@ const YourComponent = () => {
 
       <div className="mt-8 w-full">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-lg font-semibold">Integration Code:</h3>
+          <h3 className="font-bold text-2xl my-4">Integration Code:</h3>
         </div>
         <div className="flex justify-end my-4">
           <Button
