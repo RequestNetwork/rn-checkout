@@ -13,12 +13,20 @@ import { Error } from "./ui/error";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import { Switch } from "./ui/switch";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 
 export const Playground = () => {
   const {
     register,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<z.infer<typeof PropsValidation>>({
     resolver: zodResolver(PropsValidation),
     mode: "onChange",
@@ -26,6 +34,10 @@ export const Playground = () => {
       amountInUSD: 0,
       supportedCurrencies: [],
       sellerAddress: "",
+      sellerInfo: {},
+      buyerInfo: {},
+      invoiceNumber: "",
+      enableBuyerInfo: false,
     },
   });
 
@@ -36,11 +48,11 @@ export const Playground = () => {
   const generateIntegrationCode = () => {
     const props = [
       `amountInUSD={${formValues.amountInUSD || 0}}`,
-      formValues.sellerInfo?.name &&
-        `sellerInfo={{
-        name: "${formValues.sellerInfo.name}",
-        ${formValues.sellerInfo?.logo ? `logo: "${formValues.sellerInfo.logo}",` : ""}
-      }}`,
+      formValues.sellerInfo &&
+        `sellerInfo={${JSON.stringify(formValues.sellerInfo, null, 2)}}`,
+      formValues.enableBuyerInfo &&
+        formValues.buyerInfo &&
+        `buyerInfo={${JSON.stringify(formValues.buyerInfo, null, 2)}}`,
       (formValues.productInfo?.name ||
         formValues.productInfo?.description ||
         formValues.productInfo?.image) &&
@@ -52,6 +64,7 @@ export const Playground = () => {
       formValues.sellerAddress && `sellerAddress="${formValues.sellerAddress}"`,
       formValues.supportedCurrencies?.length &&
         `supportedCurrencies={${JSON.stringify(formValues.supportedCurrencies)}}`,
+      formValues.invoiceNumber && `invoiceNumber="${formValues.invoiceNumber}"`,
     ]
       .filter(Boolean)
       .join("\n      ");
@@ -90,27 +103,229 @@ const YourComponent = () => {
     <div className="flex flex-col gap-4 mt-4">
       <section className="flex flex-col items-center md:items-start md:justify-between md:flex-row">
         <div className="flex flex-col gap-4 w-1/2">
-          {/* Seller Info */}
-          <div className="flex flex-col gap-2">
-            <Label>Seller name</Label>
-            <Input
-              placeholder="Request Network"
-              {...register("sellerInfo.name")}
-            />
-            {errors.sellerInfo?.name?.message && (
-              <Error>{errors.sellerInfo.name.message}</Error>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Seller Logo</Label>
-            <Input
-              placeholder="https://example.com/logo.png"
-              {...register("sellerInfo.logo")}
-            />
-            {errors.sellerInfo?.logo?.message && (
-              <Error>{errors.sellerInfo.logo.message}</Error>
-            )}
-          </div>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="seller-info">
+              <AccordionTrigger>Seller Info</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label>Seller name</Label>
+                    <Input
+                      placeholder="Request Network"
+                      {...register("sellerInfo.name")}
+                    />
+                    {errors.sellerInfo?.name?.message && (
+                      <Error>{errors.sellerInfo.name.message}</Error>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Seller Logo</Label>
+                    <Input
+                      placeholder="https://example.com/logo.png"
+                      {...register("sellerInfo.logo")}
+                    />
+                    {errors.sellerInfo?.logo?.message && (
+                      <Error>{errors.sellerInfo.logo.message}</Error>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Email</Label>
+                    <Input
+                      placeholder="seller@example.com"
+                      {...register("sellerInfo.email")}
+                    />
+                    {errors.sellerInfo?.email?.message && (
+                      <Error>{errors.sellerInfo.email.message}</Error>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>First Name</Label>
+                    <Input
+                      placeholder="John"
+                      {...register("sellerInfo.firstName")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Last Name</Label>
+                    <Input
+                      placeholder="Doe"
+                      {...register("sellerInfo.lastName")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Business Name</Label>
+                    <Input
+                      placeholder="Acme Inc."
+                      {...register("sellerInfo.businessName")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Phone</Label>
+                    <Input
+                      placeholder="+1234567890"
+                      {...register("sellerInfo.phone")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Street Address</Label>
+                    <Input
+                      placeholder="123 Main St"
+                      {...register("sellerInfo.address.street-address")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>City</Label>
+                    <Input
+                      placeholder="New York"
+                      {...register("sellerInfo.address.locality")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>State/Province</Label>
+                    <Input
+                      placeholder="NY"
+                      {...register("sellerInfo.address.region")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Country</Label>
+                    <Input
+                      placeholder="USA"
+                      {...register("sellerInfo.address.country-name")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Postal Code</Label>
+                    <Input
+                      placeholder="10001"
+                      {...register("sellerInfo.address.postal-code")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Tax Registration</Label>
+                    <Input
+                      placeholder="Tax ID"
+                      {...register("sellerInfo.taxRegistration")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label>Company Registration</Label>
+                    <Input
+                      placeholder="Company ID"
+                      {...register("sellerInfo.companyRegistration")}
+                    />
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="buyer-info">
+              <AccordionTrigger>Buyer Info</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex items-center space-x-2 mb-4">
+                  <Switch
+                    id="enable-buyer-info"
+                    checked={formValues.enableBuyerInfo}
+                    onCheckedChange={(checked) =>
+                      setValue("enableBuyerInfo", checked)
+                    }
+                  />
+                  <Label htmlFor="enable-buyer-info">Enable Buyer Info</Label>
+                </div>
+                {formValues.enableBuyerInfo && (
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label>Email</Label>
+                      <Input
+                        placeholder="buyer@example.com"
+                        {...register("buyerInfo.email")}
+                      />
+                      {errors.buyerInfo?.email?.message && (
+                        <Error>{errors.buyerInfo.email.message}</Error>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>First Name</Label>
+                      <Input
+                        placeholder="Jane"
+                        {...register("buyerInfo.firstName")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Last Name</Label>
+                      <Input
+                        placeholder="Smith"
+                        {...register("buyerInfo.lastName")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Business Name</Label>
+                      <Input
+                        placeholder="XYZ Corp"
+                        {...register("buyerInfo.businessName")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Phone</Label>
+                      <Input
+                        placeholder="+1987654321"
+                        {...register("buyerInfo.phone")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Street Address</Label>
+                      <Input
+                        placeholder="456 Elm St"
+                        {...register("buyerInfo.address.street-address")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>City</Label>
+                      <Input
+                        placeholder="Los Angeles"
+                        {...register("buyerInfo.address.locality")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>State/Province</Label>
+                      <Input
+                        placeholder="CA"
+                        {...register("buyerInfo.address.region")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Country</Label>
+                      <Input
+                        placeholder="USA"
+                        {...register("buyerInfo.address.country-name")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Postal Code</Label>
+                      <Input
+                        placeholder="90001"
+                        {...register("buyerInfo.address.postal-code")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Tax Registration</Label>
+                      <Input
+                        placeholder="Tax ID"
+                        {...register("buyerInfo.taxRegistration")}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Company Registration</Label>
+                      <Input
+                        placeholder="Company ID"
+                        {...register("buyerInfo.companyRegistration")}
+                      />
+                    </div>
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
           {/* Product Info */}
           <div className="flex flex-col gap-2">
             <Label>Product name</Label>
@@ -168,7 +383,16 @@ const YourComponent = () => {
             )}
           </div>
 
-          {/* Curerncies */}
+          {/* Invoice Number */}
+          <div className="flex flex-col gap-2">
+            <Label>Invoice Number</Label>
+            <Input placeholder="INV-001" {...register("invoiceNumber")} />
+            {errors.invoiceNumber?.message && (
+              <Error>{errors.invoiceNumber.message}</Error>
+            )}
+          </div>
+
+          {/* Currencies */}
           <div className="flex flex-col gap-2">
             <Label>Currencies</Label>
             <CurrencyCombobox register={register} name="supportedCurrencies" />
@@ -188,19 +412,19 @@ const YourComponent = () => {
         </div>
         <PaymentWidget
           amountInUSD={formValues.amountInUSD || 0}
-          sellerInfo={{
-            name: formValues.sellerInfo?.name,
-            logo: formValues.sellerInfo?.logo,
-          }}
+          sellerInfo={formValues.sellerInfo}
+          buyerInfo={formValues.buyerInfo}
           productInfo={{
             description: formValues.productInfo?.description,
             image: formValues.productInfo?.image,
             name: formValues.productInfo?.name,
           }}
+          enableBuyerInfo={formValues.enableBuyerInfo}
           builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
           sellerAddress={formValues.sellerAddress}
           // @ts-ignore
           supportedCurrencies={formValues.supportedCurrencies}
+          invoiceNumber={formValues.invoiceNumber}
         />
       </section>
 
