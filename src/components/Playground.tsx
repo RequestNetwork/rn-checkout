@@ -88,8 +88,8 @@ const YourComponent = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <section className="flex flex-col items-center md:items-start md:justify-between md:flex-row">
-        <div className="flex flex-col gap-4 w-1/2">
+      <section className="flex flex-col gap-6 lg:gap-4 items-center md:items-start md:justify-between lg:flex-row">
+        <div className="flex flex-col gap-4 w-full lg:w-1/2">
           {/* Seller Info */}
           <div className="flex flex-col gap-2">
             <Label>Seller name</Label>
@@ -186,22 +186,24 @@ const YourComponent = () => {
             </div>
           </div>
         </div>
-        <PaymentWidget
-          amountInUSD={formValues.amountInUSD || 0}
-          sellerInfo={{
-            name: formValues.sellerInfo?.name,
-            logo: formValues.sellerInfo?.logo,
-          }}
-          productInfo={{
-            description: formValues.productInfo?.description,
-            image: formValues.productInfo?.image,
-            name: formValues.productInfo?.name,
-          }}
-          builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
-          sellerAddress={formValues.sellerAddress}
-          // @ts-ignore
-          supportedCurrencies={formValues.supportedCurrencies}
-        />
+        <div className="w-full lg:w-1/2">
+          <PaymentWidget
+            amountInUSD={formValues.amountInUSD || 0}
+            sellerInfo={{
+              name: formValues.sellerInfo?.name,
+              logo: formValues.sellerInfo?.logo,
+            }}
+            productInfo={{
+              description: formValues.productInfo?.description,
+              image: formValues.productInfo?.image,
+              name: formValues.productInfo?.name,
+            }}
+            builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
+            sellerAddress={formValues.sellerAddress}
+            // @ts-ignore
+            supportedCurrencies={formValues.supportedCurrencies}
+          />
+        </div>
       </section>
 
       <div className="mt-8 w-full">
