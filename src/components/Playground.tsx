@@ -101,8 +101,8 @@ const YourComponent = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <section className="flex flex-col items-center md:items-start md:justify-between md:flex-row">
-        <div className="flex flex-col gap-4 w-1/2">
+      <section className="flex flex-col gap-6 lg:gap-4 items-center md:items-start md:justify-between lg:flex-row">
+        <div className="flex flex-col gap-4 w-full lg:w-1/2">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="seller-info">
               <AccordionTrigger>Seller Info</AccordionTrigger>
@@ -410,27 +410,29 @@ const YourComponent = () => {
             </div>
           </div>
         </div>
-        <PaymentWidget
-          amountInUSD={formValues.amountInUSD || 0}
-          sellerInfo={formValues.sellerInfo}
-          buyerInfo={formValues.buyerInfo}
-          productInfo={{
-            description: formValues.productInfo?.description,
-            image: formValues.productInfo?.image,
-            name: formValues.productInfo?.name,
-          }}
-          enableBuyerInfo={formValues.enableBuyerInfo}
-          builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
-          sellerAddress={formValues.sellerAddress}
-          // @ts-ignore
-          supportedCurrencies={formValues.supportedCurrencies}
-          invoiceNumber={formValues.invoiceNumber}
-        />
+        <div className="w-full lg:w-1/2">
+          <PaymentWidget
+            amountInUSD={formValues.amountInUSD || 0}
+            sellerInfo={formValues.sellerInfo}
+            buyerInfo={formValues.buyerInfo}
+            productInfo={{
+              description: formValues.productInfo?.description,
+              image: formValues.productInfo?.image,
+              name: formValues.productInfo?.name,
+            }}
+            enableBuyerInfo={formValues.enableBuyerInfo}
+            builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
+            sellerAddress={formValues.sellerAddress}
+            // @ts-ignore
+            supportedCurrencies={formValues.supportedCurrencies}
+            invoiceNumber={formValues.invoiceNumber}
+          />
+        </div>
       </section>
 
       <div className="mt-8 w-full">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-lg font-semibold">Integration Code:</h3>
+          <h3 className="font-bold text-2xl my-4">Integration Code:</h3>
         </div>
         <div className="flex justify-end my-4">
           <Button
