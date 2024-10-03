@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { GoogleTagManager } from "@next/third-parties/google";
+import VersionDisplay from "@/components/VersionBadge";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -73,6 +74,7 @@ export default function RootLayout({
             </Dock>
           </div>
         </TooltipProvider>
+        <VersionDisplay githubRelease="https://github.com/RequestNetwork/rn-checkout/releases" />
       </body>
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID as string} />
     </html>
