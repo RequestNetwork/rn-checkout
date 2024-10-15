@@ -62,4 +62,13 @@ export const PropsValidation = z.object({
     .default([]),
   invoiceNumber: z.string().optional(),
   enableBuyerInfo: z.boolean().default(false),
+  feeAddress: z
+    .string()
+    .refine(isEthereumAddress, "Invalid fee address")
+    .optional()
+    .nullable(),
+  feeAmount: z
+    .number()
+    .gte(0, "Fee amount needs to be higher than 0")
+    .default(0),
 });

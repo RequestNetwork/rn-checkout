@@ -4,7 +4,7 @@ import { PropsValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PaymentWidget from "@requestnetwork/payment-widget/react";
 import { CopyIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
@@ -20,6 +20,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+
+import { cn } from "@/lib/utils";
+import { ZERO_ADDRESS } from "@/lib/constants";
 
 export const Playground = () => {
   const {
@@ -38,6 +41,8 @@ export const Playground = () => {
       buyerInfo: {},
       invoiceNumber: "",
       enableBuyerInfo: false,
+      feeAddress: ZERO_ADDRESS,
+      feeAmount: 0,
     },
   });
 
@@ -65,6 +70,10 @@ export const Playground = () => {
       formValues.supportedCurrencies?.length &&
         `supportedCurrencies={${JSON.stringify(formValues.supportedCurrencies)}}`,
       formValues.invoiceNumber && `invoiceNumber="${formValues.invoiceNumber}"`,
+      formValues.feeAddress &&
+        formValues.feeAddress !== ZERO_ADDRESS &&
+        `feeAddress="${formValues.feeAddress}"`,
+      formValues.feeAmount && `feeAmountInUSD={${formValues.feeAmount}}`,
     ]
       .filter(Boolean)
       .join("\n      ");
@@ -98,6 +107,13 @@ const YourComponent = () => {
       document.body.removeChild(textArea);
     }
   };
+
+  useEffect(() => {
+    if (formValues.feeAddress?.length === 0) {
+      setValue("feeAddress", ZERO_ADDRESS);
+      setValue("feeAmount", 0);
+    }
+  }, [formValues.feeAddress, formValues.feeAmount]);
 
   return (
     <div className="flex flex-col gap-4 mt-4">
@@ -359,10 +375,17 @@ const YourComponent = () => {
           </div>
           {/* Seller Address */}
           <div className="flex flex-col gap-2">
-            <Label>Seller address</Label>
+            <Label className="flex items-center">
+              Seller address
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
             <Input
               placeholder="0x1234567890123456789012345678901234567890"
               {...register("sellerAddress")}
+              className={cn(
+                "border-2",
+                errors.sellerAddress ? "border-red-500" : "border-gray-200"
+              )}
             />
             {errors.sellerAddress?.message && (
               <Error>{errors.sellerAddress.message}</Error>
@@ -371,12 +394,19 @@ const YourComponent = () => {
 
           {/* Amount in USD */}
           <div className="flex flex-col gap-2">
-            <Label>Amount in USD</Label>
+            <Label className="flex items-center">
+              Amount in USD
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
             <Input
               placeholder="25.55"
               {...register("amountInUSD", {
                 valueAsNumber: true,
               })}
+              className={cn(
+                "border-2",
+                errors.amountInUSD ? "border-red-500" : "border-gray-200"
+              )}
             />
             {errors.amountInUSD?.message && (
               <Error>{errors.amountInUSD.message}</Error>
@@ -392,10 +422,44 @@ const YourComponent = () => {
             )}
           </div>
 
+          {/* Fee */}
+          <div className="flex flex-col gap-2">
+            <Label>Fee Address</Label>
+            <Input
+              placeholder="0x1234567890123456789012345678901234567890"
+              {...register("feeAddress")}
+            />
+            {errors.feeAddress?.message && (
+              <Error>{errors.feeAddress.message}</Error>
+            )}
+            <Label>Fee Amount in USD</Label>
+            <Input
+              placeholder="25.55"
+              {...register("feeAmount", {
+                valueAsNumber: true,
+              })}
+            />
+            {errors.feeAmount?.message && (
+              <Error>{errors.feeAmount.message}</Error>
+            )}
+          </div>
+
           {/* Currencies */}
           <div className="flex flex-col gap-2">
-            <Label>Currencies</Label>
-            <CurrencyCombobox register={register} name="supportedCurrencies" />
+            <Label className="flex items-center">
+              Currencies
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <CurrencyCombobox
+              register={register}
+              name="supportedCurrencies"
+              className={cn(
+                "border-2",
+                errors.supportedCurrencies
+                  ? "border-red-500"
+                  : "border-gray-200"
+              )}
+            />
             <div className="flex items-center gap-2 flex-wrap">
               {formValues.supportedCurrencies?.map((currency) => {
                 return (
@@ -408,6 +472,9 @@ const YourComponent = () => {
                 );
               })}
             </div>
+            {errors.supportedCurrencies?.message && (
+              <Error>{errors.supportedCurrencies.message}</Error>
+            )}
           </div>
         </div>
         <div className="w-full lg:w-1/2">
@@ -426,6 +493,18 @@ const YourComponent = () => {
             // @ts-ignore
             supportedCurrencies={formValues.supportedCurrencies}
             invoiceNumber={formValues.invoiceNumber}
+            feeAddress={
+              formValues.feeAddress && formValues.feeAddress.length > 0
+                ? formValues.feeAddress
+                : ZERO_ADDRESS
+            }
+            feeAmountInUSD={
+              formValues.feeAddress &&
+              formValues.feeAddress.length > 0 &&
+              formValues.feeAddress !== ZERO_ADDRESS
+                ? formValues.feeAmount
+                : 0
+            }
           />
         </div>
       </section>

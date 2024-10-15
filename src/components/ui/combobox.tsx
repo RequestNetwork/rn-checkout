@@ -29,9 +29,14 @@ const currencies = Object.entries(CURRENCY_ID).map(([key, value]) => ({
 interface CurrencyComboboxProps {
   register: UseFormRegister<any>;
   name: string;
+  className?: string;
 }
 
-export function CurrencyCombobox({ register, name }: CurrencyComboboxProps) {
+export function CurrencyCombobox({
+  register,
+  name,
+  className,
+}: CurrencyComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedCurrencies, setSelectedCurrencies] = React.useState<string[]>(
     []
@@ -55,7 +60,7 @@ export function CurrencyCombobox({ register, name }: CurrencyComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[300px] justify-between"
+          className={cn("w-[300px] justify-between", className)}
         >
           {selectedCurrencies.length > 0
             ? `${selectedCurrencies.length} selected`
