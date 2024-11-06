@@ -23,8 +23,20 @@ import {
 
 import { cn } from "@/lib/utils";
 import { ZERO_ADDRESS } from "@/lib/constants";
+import { Tabs } from "./ui/tabs";
 
 export const Playground = () => {
+  // Local state
+  const [activeTab, setActiveTab] = useState("customize");
+
+  // Tabs
+  const tabs = [
+    { label: "Customize Widget", value: "customize" },
+    { label: "Seller Billing Info", value: "seller" },
+    { label: "Buyer Billing Info", value: "buyer" },
+  ];
+
+  // Form state
   const {
     register,
     watch,
@@ -119,6 +131,18 @@ const YourComponent = () => {
     <div className="flex flex-col gap-4 mt-4">
       <section className="flex flex-col gap-6 lg:gap-4 items-center md:items-start md:justify-between lg:flex-row">
         <div className="flex flex-col gap-4 w-full lg:w-1/2">
+          <Tabs defaultValue="customize">
+            <Tabs.List tabs={tabs} />
+            <Tabs.Section value="customize">
+              <h1>Customize Widget</h1>
+            </Tabs.Section>
+            <Tabs.Section value="seller">
+              <h1>Seller Billing Info</h1>
+            </Tabs.Section>
+            <Tabs.Section value="buyer">
+              <h1>Buyer Billing Info</h1>
+            </Tabs.Section>
+          </Tabs>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="seller-info">
               <AccordionTrigger>Seller Info</AccordionTrigger>
@@ -477,7 +501,8 @@ const YourComponent = () => {
             )}
           </div>
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2 flex flex-col gap-4">
+          <h2 className="font-semibold">Preview</h2>
           <PaymentWidget
             amountInUSD={formValues.amountInUSD || 0}
             sellerInfo={formValues.sellerInfo}
@@ -509,6 +534,7 @@ const YourComponent = () => {
         </div>
       </section>
 
+      {/* Integration Code */}
       <div className="mt-8 w-full">
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-bold text-2xl my-4">Integration Code:</h3>
