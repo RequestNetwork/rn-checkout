@@ -61,7 +61,7 @@ export const PropsValidation = z.object({
     .min(1, "At least one currency must be selected")
     .default([]),
   invoiceNumber: z.string().optional(),
-  enableBuyerInfo: z.boolean().default(false),
+  enableBuyerInfo: z.boolean().default(true),
   feeAddress: z
     .string()
     .refine(isEthereumAddress, "Invalid fee address")
