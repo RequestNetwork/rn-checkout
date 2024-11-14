@@ -1,5 +1,11 @@
 import { Playground } from "@/components/Playground";
 
+export const metadata = {
+  title: "Request Checkout Playground",
+  description:
+    "A playground for the Request Checkout widget. You can experiment with the widget's properties, such as seller information, product details, and supported currencies.",
+};
+
 export default function PlaygroundPage() {
   return (
     <>
