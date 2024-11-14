@@ -49,7 +49,7 @@ interface TicketSelectorProps {
 }
 
 export function TicketSelector({ event }: TicketSelectorProps) {
-  const { tickets, updateQuantity } = useTicketStore();
+  const { tickets, incrementQuantity, decrementQuantity } = useTicketStore();
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -65,34 +65,6 @@ export function TicketSelector({ event }: TicketSelectorProps) {
   const getTicketQuantity = (ticketId: string) => {
     const key = `${event.id}-${ticketId}`;
     return tickets[key]?.quantity || 0;
-  };
-
-  const handleQuantityChange = (tier: TicketTier, change: number) => {
-    const currentQuantity = getTicketQuantity(tier.id);
-    const newQuantity = currentQuantity + change;
-
-    if (newQuantity > tier.available) return;
-
-    if (newQuantity < 0) return;
-
-    const key = `${event.id}-${tier.id}`;
-
-    if (currentQuantity === 0 && newQuantity > 0) {
-      updateQuantity(event.id, tier.id, newQuantity);
-      useTicketStore.setState((state) => ({
-        tickets: {
-          ...state.tickets,
-          [key]: {
-            id: tier.id,
-            quantity: newQuantity,
-            price: tier.price,
-            name: tier.name,
-          },
-        },
-      }));
-    } else {
-      updateQuantity(event.id, tier.id, newQuantity);
-    }
   };
 
   return (
@@ -114,7 +86,7 @@ export function TicketSelector({ event }: TicketSelectorProps) {
               </div>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => handleQuantityChange(tier, -1)}
+                  onClick={() => decrementQuantity(event.id, tier)}
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === 0}
                 >
@@ -124,7 +96,7 @@ export function TicketSelector({ event }: TicketSelectorProps) {
                   {getTicketQuantity(tier.id)}
                 </span>
                 <button
-                  onClick={() => handleQuantityChange(tier, 1)}
+                  onClick={() => incrementQuantity(event.id, tier)}
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === tier.available}
                 >

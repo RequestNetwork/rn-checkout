@@ -1,16 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface TicketItem {
+interface TicketTier {
   id: string;
-  quantity: number;
-  price: number;
   name: string;
+  price: number;
+  description: string;
+  available: number;
+}
+
+interface StoredTicket {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
 interface TicketStore {
-  tickets: Record<string, TicketItem>;
-  updateQuantity: (eventId: string, ticketId: string, quantity: number) => void;
+  tickets: Record<string, StoredTicket>;
+  incrementQuantity: (eventId: string, ticket: TicketTier) => void;
+  decrementQuantity: (eventId: string, ticket: TicketTier) => void;
   clearTickets: () => void;
 }
 
@@ -18,11 +27,29 @@ export const useTicketStore = create<TicketStore>()(
   persist(
     (set) => ({
       tickets: {},
-      updateQuantity: (eventId: string, ticketId: string, quantity: number) =>
+      incrementQuantity: (eventId: string, ticket: TicketTier) =>
         set((state) => {
-          const key = `${eventId}-${ticketId}`;
+          const key = `${eventId}-${ticket.id}`;
 
-          if (quantity === 0) {
+          const ticketExists = state.tickets[key];
+
+          return {
+            tickets: {
+              ...state.tickets,
+              [key]: {
+                id: ticket.id,
+                quantity: ticketExists ? ticketExists.quantity + 1 : 1,
+                price: ticket.price,
+                name: ticket.name,
+              },
+            },
+          };
+        }),
+      decrementQuantity: (eventId: string, ticket: TicketTier) =>
+        set((state) => {
+          const key = `${eventId}-${ticket.id}`;
+
+          if (state.tickets[key].quantity === 1) {
             const { [key]: _, ...remainingTickets } = state.tickets;
             return { tickets: remainingTickets };
           }
@@ -31,10 +58,8 @@ export const useTicketStore = create<TicketStore>()(
             tickets: {
               ...state.tickets,
               [key]: {
-                id: ticketId,
-                quantity,
-                price: state.tickets[key]?.price || 0,
-                name: state.tickets[key]?.name || "",
+                ...state.tickets[key],
+                quantity: state.tickets[key].quantity - 1,
               },
             },
           };
