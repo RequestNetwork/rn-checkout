@@ -18,8 +18,8 @@ interface StoredTicket {
 
 interface TicketStore {
   tickets: Record<string, StoredTicket>;
-  incrementQuantity: (eventId: string, ticket: TicketTier) => void;
-  decrementQuantity: (eventId: string, ticket: TicketTier) => void;
+  incrementQuantity: (key: string, ticket: TicketTier) => void;
+  decrementQuantity: (key: string) => void;
   clearTickets: () => void;
 }
 
@@ -27,17 +27,15 @@ export const useTicketStore = create<TicketStore>()(
   persist(
     (set) => ({
       tickets: {},
-      incrementQuantity: (eventId: string, ticket: TicketTier) =>
+      incrementQuantity: (key: string, ticket: TicketTier) =>
         set((state) => {
-          const key = `${eventId}-${ticket.id}`;
-
           const ticketExists = state.tickets[key];
 
           return {
             tickets: {
               ...state.tickets,
               [key]: {
-                id: ticket.id,
+                id: key,
                 quantity: ticketExists ? ticketExists.quantity + 1 : 1,
                 price: ticket.price,
                 name: ticket.name,
@@ -45,10 +43,8 @@ export const useTicketStore = create<TicketStore>()(
             },
           };
         }),
-      decrementQuantity: (eventId: string, ticket: TicketTier) =>
+      decrementQuantity: (key: string) =>
         set((state) => {
-          const key = `${eventId}-${ticket.id}`;
-
           if (state.tickets[key].quantity === 1) {
             const { [key]: _, ...remainingTickets } = state.tickets;
             return { tickets: remainingTickets };

@@ -86,7 +86,7 @@ export function TicketSelector({ event }: TicketSelectorProps) {
               </div>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => decrementQuantity(event.id, tier)}
+                  onClick={() => decrementQuantity(`${event.id}-${tier.id}`)}
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === 0}
                 >
@@ -96,7 +96,9 @@ export function TicketSelector({ event }: TicketSelectorProps) {
                   {getTicketQuantity(tier.id)}
                 </span>
                 <button
-                  onClick={() => incrementQuantity(event.id, tier)}
+                  onClick={() =>
+                    incrementQuantity(`${event.id}-${tier.id}`, tier)
+                  }
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === tier.available}
                 >
