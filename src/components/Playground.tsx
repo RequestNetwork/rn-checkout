@@ -17,7 +17,7 @@ import { Textarea } from "./ui/textarea";
 import { ZERO_ADDRESS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { SectionHeader } from "./ui/section-header";
-import { Tabs } from "./ui/tabs";
+import { Tabs } from "./ui/custom-tabs";
 
 export const Playground = () => {
   // Tabs

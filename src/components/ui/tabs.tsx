@@ -1,98 +1,55 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 
-interface TabsContextType {
-  activeTab: string;
-  setActiveTab: (value: string) => void;
-}
+import { cn } from "@/lib/utils"
 
-const TabsContext = React.createContext<TabsContextType | undefined>(undefined);
+const Tabs = TabsPrimitive.Root
 
-interface TabsProps {
-  defaultValue: string;
-  onChange?: (value: string) => void;
-  children: React.ReactNode;
-  className?: string;
-}
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
+      className
+    )}
+    {...props}
+  />
+))
+TabsList.displayName = TabsPrimitive.List.displayName
 
-interface TabListProps {
-  tabs: {
-    label: string;
-    value: string;
-  }[];
-  className?: string;
-}
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-50",
+      className
+    )}
+    {...props}
+  />
+))
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 
-interface TabSectionProps {
-  value: string;
-  children: React.ReactNode;
-}
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
+      className
+    )}
+    {...props}
+  />
+))
+TabsContent.displayName = TabsPrimitive.Content.displayName
 
-export const Tabs = ({
-  defaultValue,
-  onChange,
-  children,
-  className,
-}: TabsProps) => {
-  const [activeTab, setActiveTab] = React.useState(defaultValue);
-
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    onChange?.(value);
-  };
-
-  return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab: handleTabChange }}>
-      <div className={cn("w-full", className)}>{children}</div>
-    </TabsContext.Provider>
-  );
-};
-
-const TabList = ({ tabs, className }: TabListProps) => {
-  const context = React.useContext(TabsContext);
-  if (!context) throw new Error("TabList must be used within Tabs");
-
-  const { activeTab, setActiveTab } = context;
-
-  return (
-    <div className={cn("border-b border-gray-200 w-full", className)}>
-      <div className="flex w-full">
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
-            className={cn(
-              "pb-4 relative  font-semibold transition-colors flex-1",
-              "hover:text-gray-900",
-              activeTab === tab.value
-                ? "text-gray-900"
-                : "text-gray-500 hover:text-gray-700"
-            )}
-          >
-            {tab.label}
-            {activeTab === tab.value && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4AC2A1]" />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const TabSection = ({ value, children }: TabSectionProps) => {
-  const context = React.useContext(TabsContext);
-  if (!context) throw new Error("TabSection must be used within Tabs");
-
-  const { activeTab } = context;
-
-  if (activeTab !== value) return null;
-
-  return <div className="mt-4">{children}</div>;
-};
-
-// Attach components to Tabs
-Tabs.List = TabList;
-Tabs.Section = TabSection;
+export { Tabs, TabsList, TabsTrigger, TabsContent }

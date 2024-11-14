@@ -1,3 +1,4 @@
+import { EventShowcase } from "@/components/EventShowcase";
 import {
   Carousel,
   CarouselContent,
@@ -14,7 +15,8 @@ export const metadata = {
 };
 
 export default function DemoPage() {
-  const featuredEvents = eventData.events.filter((event) => event.featured);
+  const events = eventData.events;
+  const featuredEvents = events.filter((event) => event.featured);
 
   return (
     <>
@@ -50,6 +52,7 @@ export default function DemoPage() {
             </CarouselContent>
           </Carousel>
         </div>
+        <EventShowcase events={events} />
       </section>
     </>
   );
