@@ -49,7 +49,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${montserrat.className} pb-24`}>
         <Navbar />
-        {children}
+        <main className="max-w-[1200px] w-full mx-auto px-5 py-8">
+          {children}
+        </main>
         <TooltipProvider>
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
             <Dock direction="middle">

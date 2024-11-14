@@ -2,7 +2,7 @@ import { Playground } from "@/components/Playground";
 
 export default function PlaygroundPage() {
   return (
-    <main className="flex flex-col gap-4 max-w-[1200px] w-full mx-auto px-5 py-8">
+    <>
       <h1 className="font-bold text-4xl mb-4">Request Checkout Playground</h1>
 
       <div className="flex flex-col gap-2">
@@ -46,6 +46,6 @@ export default function PlaygroundPage() {
           <Playground />
         </section>
       </div>
-    </main>
+    </>
   );
 }
