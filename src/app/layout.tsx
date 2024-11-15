@@ -24,17 +24,17 @@ export const metadata: Metadata = {
 
 const DOCK_ICONS = [
   {
-    href: "https://request.network",
+    href: process.env.NEXT_PUBLIC_WEBSITE_URL as string,
     icon: HomeIcon,
     label: "Request Network Website",
   },
   {
-    href: "https://docs.request.network/building-blocks/templates",
+    href: process.env.NEXT_PUBLIC_DOCUMENTATION_URL as string,
     icon: Book,
     label: "Documentation",
   },
   {
-    href: "https://www.npmjs.com/package/@requestnetwork/payment-widget",
+    href: process.env.NEXT_PUBLIC_NPM_PACKAGE_URL as string,
     icon: Package,
     label: "NPM Package",
   },
