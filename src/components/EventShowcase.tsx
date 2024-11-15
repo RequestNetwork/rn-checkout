@@ -43,9 +43,16 @@ export const EventShowcase = ({ events }: EventShowcaseProps) => {
 
   return (
     <Tabs defaultValue="all" onValueChange={setActiveTab}>
-      <TabsList className="w-fit justify-start overflow-x-auto">
+      <TabsList
+        className="w-fit justify-start overflow-x-auto"
+        aria-label="Event Categories"
+      >
         {eventTypes.map((type) => (
-          <TabsTrigger key={type} value={type.toLowerCase()}>
+          <TabsTrigger
+            key={type}
+            value={type.toLowerCase()}
+            aria-label={`Show ${type} events`}
+          >
             {type}
           </TabsTrigger>
         ))}
@@ -59,6 +66,7 @@ export const EventShowcase = ({ events }: EventShowcaseProps) => {
                 href={`/event/${event.id}`}
                 key={event.id}
                 className="group relative flex flex-col rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+                aria-label={`View details for ${event.name} on ${format(new Date(event.dateTime), "MMM d, yyyy")}`}
               >
                 <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
                   <Image

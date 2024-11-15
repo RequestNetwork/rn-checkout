@@ -18,7 +18,11 @@ export const Navbar = () => {
             height={200}
           />
 
-          <ul className="flex items-center space-x-4" role="tablist">
+          <ul
+            className="flex items-center space-x-4"
+            role="tablist"
+            aria-label="Main Navigation"
+          >
             <li className="flex items-center space-x-2">
               <Link
                 href="/"

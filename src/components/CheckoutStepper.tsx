@@ -18,9 +18,13 @@ export function CheckoutStepper() {
   const hasItems = Object.keys(tickets).length > 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" role="region" aria-label="Checkout Process">
       {/* Stepper UI */}
-      <div className="flex items-center justify-center">
+      <div
+        className="flex items-center justify-center"
+        role="navigation"
+        aria-label="Checkout Steps"
+      >
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center">
             <div
@@ -30,6 +34,9 @@ export function CheckoutStepper() {
                     ? "border-[#099C77] text-[#099C77]"
                     : "border-gray-300 text-gray-500"
                 }`}
+              aria-current={currentStep === step.id ? "step" : undefined}
+              role="status"
+              aria-label={`Step ${index + 1}: ${step.title}`}
             >
               {index + 1}
             </div>
@@ -57,6 +64,7 @@ export function CheckoutStepper() {
                     ? "bg-[#099C77] text-white hover:bg-[#099C77]/90"
                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
+                aria-label={hasItems ? "Proceed to payment" : "Cart is empty"}
               >
                 Proceed to Payment
               </button>

@@ -22,13 +22,18 @@ export function CartReview() {
   }));
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm">
+    <div
+      className="bg-white rounded-xl p-6 shadow-sm"
+      role="region"
+      aria-label="Shopping Cart"
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Cart Review</h2>
         {groupedTickets.length > 0 && (
           <button
             onClick={clearTickets}
             className="text-red-500 hover:text-red-600 text-sm font-medium"
+            aria-label="Clear all items from cart"
           >
             Clear Cart
           </button>
@@ -56,10 +61,14 @@ export function CartReview() {
                     <button
                       onClick={() => decrementQuantity(ticket.id)}
                       className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
+                      aria-label={`Decrease quantity for ${ticket.name}`}
                     >
                       -
                     </button>
-                    <span className="w-8 text-center font-medium">
+                    <span
+                      className="w-8 text-center font-medium"
+                      aria-label={`${ticket.quantity} tickets selected`}
+                    >
                       {ticket.quantity}
                     </span>
                     <button
@@ -73,6 +82,7 @@ export function CartReview() {
                         })
                       }
                       className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
+                      aria-label={`Increase quantity for ${ticket.name}`}
                     >
                       +
                     </button>

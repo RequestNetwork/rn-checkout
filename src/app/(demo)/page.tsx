@@ -23,11 +23,18 @@ export default function DemoPage() {
       <section className="flex flex-col gap-2">
         {/* Featured Events Carousel */}
         <div className="mb-8">
-          <Carousel className="w-full" autoplay>
+          <Carousel
+            className="w-full"
+            autoplay
+            aria-label="Featured Events Slideshow"
+          >
             <CarouselContent>
               {featuredEvents.map((event) => (
                 <CarouselItem key={event.id}>
-                  <Link href={`/events/${event.id}`}>
+                  <Link
+                    href={`/events/${event.id}`}
+                    aria-label={`View details for ${event.name}`}
+                  >
                     <div className="relative aspect-[3/1] w-full overflow-hidden rounded-lg">
                       <Image
                         src={event.headerImage}

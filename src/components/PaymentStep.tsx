@@ -21,7 +21,11 @@ export function PaymentStep() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Order Summary */}
-      <div className="bg-white shadow-md rounded-xl p-6 border border-gray-100">
+      <div
+        className="bg-white shadow-md rounded-xl p-6 border border-gray-100"
+        role="region"
+        aria-label="Order Summary"
+      >
         <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
         <div className="space-y-4">
           {Object.values(tickets).map((ticket) => (
@@ -50,7 +54,7 @@ export function PaymentStep() {
       </div>
 
       {/* Payment Widget */}
-      <div>
+      <div role="region" aria-label="Payment Widget">
         <h2 className="text-2xl font-semibold mb-6">Payment</h2>
         <PaymentWidget
           amountInUSD={total}

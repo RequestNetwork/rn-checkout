@@ -89,10 +89,14 @@ export function TicketSelector({ event }: TicketSelectorProps) {
                   onClick={() => decrementQuantity(`${event.id}-${tier.id}`)}
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === 0}
+                  aria-label={`Decrease quantity for ${tier.name}`}
                 >
                   -
                 </button>
-                <span className="w-8 text-center">
+                <span
+                  className="w-8 text-center"
+                  aria-label={`${getTicketQuantity(tier.id)} tickets selected`}
+                >
                   {getTicketQuantity(tier.id)}
                 </span>
                 <button
@@ -101,6 +105,7 @@ export function TicketSelector({ event }: TicketSelectorProps) {
                   }
                   className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-[#099C77] hover:text-[#099C77] transition-colors"
                   disabled={getTicketQuantity(tier.id) === tier.available}
+                  aria-label={`Increase quantity for ${tier.name}`}
                 >
                   +
                 </button>
@@ -123,6 +128,11 @@ export function TicketSelector({ event }: TicketSelectorProps) {
           <button
             className="w-full bg-[#099C77] text-white py-3 rounded-lg font-medium hover:bg-[#078665] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={total === 0}
+            aria-label={
+              total === 0
+                ? "Checkout disabled - no tickets selected"
+                : "Proceed to checkout"
+            }
           >
             Checkout
           </button>
