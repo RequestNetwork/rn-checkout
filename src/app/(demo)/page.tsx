@@ -32,7 +32,7 @@ export default function DemoPage() {
               {featuredEvents.map((event) => (
                 <CarouselItem key={event.id}>
                   <Link
-                    href={`/events/${event.id}`}
+                    href={`/event/${event.id}`}
                     aria-label={`View details for ${event.name}`}
                   >
                     <div className="relative aspect-[3/1] w-full overflow-hidden rounded-lg">
