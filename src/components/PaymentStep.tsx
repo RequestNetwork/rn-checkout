@@ -3,10 +3,12 @@
 import { useTicketStore } from "@/store/ticketStore";
 import PaymentWidget from "@requestnetwork/payment-widget/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function PaymentStep() {
   const { tickets, clearTickets } = useTicketStore();
   const [total, setTotal] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const newTotal = Object.values(tickets).reduce(
@@ -61,6 +63,10 @@ export function PaymentStep() {
           ]}
           onPaymentSuccess={() => {
             clearTickets();
+
+            setTimeout(() => {
+              router.push("/");
+            }, 5000);
           }}
           hideTotalAmount
         />
