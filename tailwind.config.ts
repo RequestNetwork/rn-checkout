@@ -36,6 +36,10 @@ const config = {
           },
         },
       },
+      colors: {
+        green: "#0BB489",
+        "dark-green": "#328965",
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
