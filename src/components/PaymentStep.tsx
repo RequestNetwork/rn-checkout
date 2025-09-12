@@ -1,9 +1,9 @@
 "use client";
 
 import { useTicketStore } from "@/store/ticketStore";
-import PaymentWidget from "@requestnetwork/payment-widget/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PaymentWidget } from "./payment-widget/payment-widget";
 
 export function PaymentStep() {
   const { tickets, clearTickets } = useTicketStore();
@@ -17,6 +17,25 @@ export function PaymentStep() {
     );
     setTotal(newTotal);
   }, [tickets]);
+
+  const invoiceItems = Object.values(tickets).map((ticket, index) => ({
+    id: ticket.id || (index + 1).toString(),
+    description: ticket.name,
+    quantity: ticket.quantity,
+    unitPrice: ticket.price,
+    total: ticket.price * ticket.quantity,
+    currency: "USD",
+  }));
+
+  const invoiceTotals = {
+    totalDiscount: 0,
+    totalTax: 0,
+    total: total,
+    totalUSD: total,
+  };
+  console.log("ma kaj mona", total, invoiceTotals)
+
+  const clientId = process.env.NEXT_PUBLIC_RN_API_CLIENT_ID;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -56,24 +75,70 @@ export function PaymentStep() {
       {/* Payment Widget */}
       <div role="region" aria-label="Payment Widget">
         <h2 className="text-2xl font-semibold mb-6">Payment</h2>
-        <PaymentWidget
-          amountInUSD={total}
-          sellerAddress={"0xb07D2398d2004378cad234DA0EF14f1c94A530e4"}
-          builderId={process.env.NEXT_PUBLIC_BUILDER_ID}
-          supportedCurrencies={[
-            "ETH-sepolia-sepolia",
-            "fUSDC-sepolia",
-            "fUSDT-sepolia",
-          ]}
-          onPaymentSuccess={() => {
-            clearTickets();
-
-            setTimeout(() => {
-              router.push("/");
-            }, 5000);
-          }}
-          hideTotalAmount
-        />
+        {clientId && (
+          <PaymentWidget
+            amountInUsd={total.toString()}
+            recipientWallet="0xb07D2398d2004378cad234DA0EF14f1c94A530e4"
+            paymentConfig={{
+              network: "sepolia",
+              rnApiClientId: clientId,
+              supportedCurrencies: [
+                "ETH-sepolia-sepolia",
+                "fUSDT-sepolia",
+                "FAU-sepolia",
+              ],
+            }}
+            uiConfig={{
+              showRequestScanUrl: true,
+              showInvoiceDownload: true,
+            }}
+            invoiceInfo={{
+              companyInfo: {
+                name: "Event Ticketing Co.",
+                walletAddress: "0xb07D2398d2004378cad234DA0EF14f1c94A530e4",
+                address: {
+                  street: "123 Event Street",
+                  city: "San Francisco",
+                  state: "CA",
+                  zipCode: "94102",
+                  country: "USA",
+                },
+                taxId: "ETC123456789",
+                email: "billing@eventtickets.com",
+                phone: "+1-555-0123",
+                website: "https://eventtickets.com",
+              },
+              buyerInfo: {
+                email: "",
+                firstName: "",
+                lastName: "",
+                businessName: "",
+                phone: "",
+                streetAddress: "",
+                city: "",
+                state: "",  
+                country: "",
+                postalCode: "",
+              },
+              items: invoiceItems,
+              totals: invoiceTotals,
+              invoiceNumber: `INV-${Date.now()}`,
+            }}
+            onSuccess={() => {
+              clearTickets();
+              setTimeout(() => {
+                router.push("/");
+              }, 10000);
+            }}
+            onError={(error) => {
+              console.error("Payment failed:", error);
+            }}
+          >
+            <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
+              Pay with crypto
+            </div>
+          </PaymentWidget>
+        )}
       </div>
     </div>
   );

@@ -1,41 +1,51 @@
-export const CURRENCY_ID = {
-  AXS_MAINNET: "AXS-mainnet",
-  AUDIO_MAINNET: "AUDIO-mainnet",
-  RAI_MAINNET: "RAI-mainnet",
-  SYLO_MAINNET: "SYLO-mainnet",
-  LDO_MAINNET: "LDO-mainnet",
-  UST_MAINNET: "UST-mainnet",
-  MNT_MAINNET: "MNT-mainnet",
-  MIR_MAINNET: "MIR-mainnet",
-  INJ_MAINNET: "INJ-mainnet",
-  OCEAN_MAINNET: "OCEAN-mainnet",
-  ANKR_MAINNET: "ANKR-mainnet",
-  RLY_MAINNET: "RLY-mainnet",
-  DAI_MATIC: "DAI-matic",
-  USDC_MATIC: "USDC-matic",
-  USDT_MATIC: "USDT-matic",
-  DAI_BSC: "DAI-bsc",
-  BUSD_BSC: "BUSD-bsc",
-  USDC_XDAI: "USDC-xdai",
-  USDC_AVALANCHE: "USDC-avalanche",
-  USDT_AVALANCHE: "USDT-avalanche",
-  USDC_OPTIMISM: "USDC-optimism",
-  USDT_OPTIMISM: "USDT-optimism",
-  DAI_OPTIMISM: "DAI-optimism",
-  "USDC-MULTICHAIN_MOONBEAM": "USDC-multichain-moonbeam",
-  "USDC-WORMHOLE_MOONBEAM": "USDC-wormhole-moonbeam",
-  ETH_MAINNET: "ETH-mainnet",
-  USDC_MAINNET: "USDC-mainnet",
-  USDT_MAINNET: "USDT-mainnet",
-  REQ_MAINNET: "REQ-mainnet",
-  MATIC_MATIC: "MATIC-matic",
-  FTM_FANTOM: "FTM-fantom",
-  AVAX_AVALANCHE: "AVAX-avalanche",
-  "ETH-OPTIMISM_OPTIMISM": "ETH-optimism-optimism",
-  MNT_MANTLE: "MNT-mantle",
-  "ETH-SEPOLIA_SEPOLIA": "ETH-sepolia-sepolia",
-  FUSDT_SEPOLIA: "fUSDT-sepolia",
-  FUSDC_SEPOLIA: "fUSDC-sepolia",
-  "ETH-ZKSYNC_ZKSYNCERA": "ETH-zksync-zksyncera",
-  "ETH-BASE_BASE": "ETH-base-base",
-} as const;
+import { RN_API_URL } from "@/components/payment-widget/constants";
+
+export type ConversionCurrency = {
+  id: string;
+  symbol: string;
+  decimals: number;
+  address: string;
+  name: string;
+  type: "ERC20" | "ETH" | "ISO4217";
+  network: string;
+};
+
+export interface GetConversionCurrenciesResponse {
+  currencyId: string;
+  network: string;
+  conversionRoutes: ConversionCurrency[];
+}
+
+const DEFAULT_CURRENCY = "USD";
+
+export const getConversionCurrencies = async (
+  rnApiClientId: string,
+  network: string,
+): Promise<ConversionCurrency[]> => {
+  const response = await fetch(
+    `${RN_API_URL}/v2/currencies/${DEFAULT_CURRENCY}/conversion-routes?network=${network}`,
+    {
+      headers: {
+        "x-client-id": rnApiClientId,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data: GetConversionCurrenciesResponse = await response.json();
+
+  return data.conversionRoutes;
+};
+
+export const getSymbolOverride = (symbol: string) => {
+  switch (symbol.toLowerCase()) {
+    case "eth-sepolia":
+      return "ETH";
+    default:
+      return symbol;
+  }
+};
