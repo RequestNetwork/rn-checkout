@@ -102,6 +102,23 @@ export const Playground = () => {
         return JSON.stringify(obj);
       }
       
+      // Handle arrays
+      if (Array.isArray(obj)) {
+        if (obj.length === 0) return "[]";
+        
+        const arrayItems = obj
+          .filter(item => item !== undefined && item !== null)
+          .map(item => {
+            if (typeof item === 'object' && item !== null) {
+              return `${nextSpaces}${formatObject(item, indent + 2)}`;
+            }
+            return `${nextSpaces}${JSON.stringify(item)}`;
+          });
+        
+        return `[\n${arrayItems.join(',\n')}\n${spaces}]`;
+      }
+      
+      // Handle objects
       const entries = Object.entries(obj)
         .filter(([_, value]) => value !== undefined && value !== null && value !== "")
         .map(([key, value]) => {
@@ -134,10 +151,10 @@ export const Playground = () => {
         : undefined,
     };
 
-    return `import { PaymentWidget } from "@requestnetwork/payment-widget";
-import type { PaymentError } from "@requestnetwork/payment-widget";
+    return `import { PaymentWidget } from "./components/payment-widget/payment-widget";
+import type { PaymentError } from "./types";
 
-const YourComponent = () => {
+const App = () => {
   const handleSuccess = (requestId: string) => {
     console.log('Payment successful:', requestId);
   };
@@ -156,7 +173,10 @@ const YourComponent = () => {
       onSuccess={handleSuccess}
       onError={handleError}
     >
-      Pay with crypto
+      {/* Custom button example */}
+      <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
+        Pay with crypto
+      </div>
     </PaymentWidget>
   );
 };`;
@@ -217,7 +237,7 @@ const YourComponent = () => {
               className="gap-2 bg-[#4AC2A1] hover:bg-[#4AC2A1]/70 justify-self-end"
               onClick={() => {
                 navigator.clipboard.writeText(
-                  "npm install @requestnetwork/payment-widget"
+                  "npx shadcn add @requestnetwork/payment-widget"
                 );
               }}
             >
