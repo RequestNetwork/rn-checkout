@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { BuyerInfo } from "@/types";
+import type { BuyerInfo } from "../types";
 
 interface BuyerInfoProps {
   initialData?: BuyerInfo;
@@ -20,13 +20,45 @@ export function BuyerInfoForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<BuyerInfo>({
     defaultValues: initialData || {},
   });
 
+  // Watch all address fields to determine if any have values
+  const addressFields = watch([
+    "address.street",
+    "address.city",
+    "address.state",
+    "address.country",
+    "address.postalCode",
+  ]);
+
+  const hasAnyAddressField = addressFields.some(
+    (field) => field && field.trim() !== "",
+  );
+
   const onFormSubmit = (data: BuyerInfo) => {
-    onSubmit(data);
+    const cleanValue = (value: string | undefined) => {
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        return trimmed === "" ? undefined : trimmed;
+      }
+      return value;
+    };
+
+    // we want to send undefined for empty optional fields
+    const cleanData: BuyerInfo = {
+      email: data.email,
+      firstName: cleanValue(data.firstName),
+      lastName: cleanValue(data.lastName),
+      businessName: cleanValue(data.businessName),
+      phone: cleanValue(data.phone),
+      address: data.address && hasAnyAddressField ? data.address : undefined,
+    };
+
+    onSubmit(cleanData);
   };
 
   return (
@@ -91,48 +123,128 @@ export function BuyerInfoForm({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="streetAddress">Street Address</Label>
-          <Input
-            id="streetAddress"
-            placeholder="123 Main St, Apt 4B"
-            {...register("streetAddress")}
-          />
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="address.street">
+              Street Address
+              {hasAnyAddressField && <span className="text-red-500">*</span>}
+            </Label>
+            <Input
+              id="address.street"
+              placeholder="123 Main St, Apt 4B"
+              {...register("address.street", {
+                required: hasAnyAddressField
+                  ? "Street address is required when provided"
+                  : false,
+              })}
+            />
+            {errors.address?.street && (
+              <span className="text-sm text-red-500 dark:text-red-900">
+                {errors.address.street.message}
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="address.city">
+                City
+                {hasAnyAddressField && <span className="text-red-500">*</span>}
+              </Label>
+              <Input
+                id="address.city"
+                placeholder="San Francisco"
+                {...register("address.city", {
+                  required: hasAnyAddressField
+                    ? "City is required when address provided"
+                    : false,
+                })}
+              />
+              {errors.address?.city && (
+                <span className="text-sm text-red-500 dark:text-red-900">
+                  {errors.address.city.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address.state">
+                State/Province
+                {hasAnyAddressField && <span className="text-red-500">*</span>}
+              </Label>
+              <Input
+                id="address.state"
+                placeholder="CA"
+                {...register("address.state", {
+                  required: hasAnyAddressField
+                    ? "State/Province is required when address provided"
+                    : false,
+                })}
+              />
+              {errors.address?.state && (
+                <span className="text-sm text-red-500 dark:text-red-900">
+                  {errors.address.state.message}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="address.country">
+                Country
+                {hasAnyAddressField && <span className="text-red-500">*</span>}
+              </Label>
+              <Input
+                id="address.country"
+                placeholder="US"
+                {...register("address.country", {
+                  required: hasAnyAddressField
+                    ? "Country is required when address provided"
+                    : false,
+                  pattern: hasAnyAddressField
+                    ? {
+                        value: /^[A-Z]{2}$/,
+                        message:
+                          "Use a 2-letter ISO country code (e.g. US, CA, GB)",
+                      }
+                    : undefined,
+                })}
+              />
+              {errors.address?.country && (
+                <span className="text-sm text-red-500 dark:text-red-900">
+                  {errors.address.country.message}
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address.postalCode">
+                Postal Code
+                {hasAnyAddressField && <span className="text-red-500">*</span>}
+              </Label>
+              <Input
+                id="address.postalCode"
+                placeholder="94105"
+                {...register("address.postalCode", {
+                  required: hasAnyAddressField
+                    ? "Postal code is required when address provided"
+                    : false,
+                })}
+              />
+              {errors.address?.postalCode && (
+                <span className="text-sm text-red-500 dark:text-red-900">
+                  {errors.address.postalCode.message}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              placeholder="San Francisco"
-              {...register("city")}
-            />
+        {hasAnyAddressField && (
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            <span className="text-red-500">*</span> All address fields are
+            required when providing an address
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="state">State/Province</Label>
-            <Input id="state" placeholder="CA" {...register("state")} />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="country">Country</Label>
-            <Input
-              id="country"
-              placeholder="United States"
-              {...register("country")}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="postalCode">Postal Code</Label>
-            <Input
-              id="postalCode"
-              placeholder="94105"
-              {...register("postalCode")}
-            />
-          </div>
-        </div>
+        )}
 
         <div className="flex space-x-2">
           <Button

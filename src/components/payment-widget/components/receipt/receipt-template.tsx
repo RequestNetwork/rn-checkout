@@ -2,37 +2,45 @@ import type { FC } from "react";
 import {
   formatCryptoAmount,
   formatUSDAmount,
-  formatInvoiceDate,
-  type InvoiceData,
-} from "@/lib/invoice";
+  formatReceiptDate,
+  type ReceiptData,
+} from "../../utils/receipt";
 import "./styles.css";
 
-export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
-  invoice,
+export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({
+  receipt,
 }) => {
   return (
-    <div className="invoice-container">
-      <div className="invoice-header">
+    <div className="receipt-container">
+      <div className="receipt-header">
         <div className="company-info">
-          <h1 className="company-name">{invoice.company.name}</h1>
+          <h1 className="company-name">{receipt.company.name}</h1>
           <div className="company-details">
-            <div>{invoice.company.address.street}</div>
-            <div>
-              {invoice.company.address.city}, {invoice.company.address.state}{""}
-              {invoice.company.address.zipCode}
-            </div>
-            {invoice.company.email && <div>{invoice.company.email}</div>}
-            <div>Tax ID: {invoice.company.taxId}</div>
+            {receipt.company.address && (
+              <>
+                <div>{receipt.company.address.street}</div>
+                <div>
+                  {receipt.company.address.city},{""}
+                  {receipt.company.address.state}{""}
+                  {receipt.company.address.postalCode}{""}
+                  {receipt.company.address.country}
+                </div>
+              </>
+            )}
+            {receipt.company.email && <div>{receipt.company.email}</div>}
+            {receipt.company.taxId && (
+              <div>Tax ID: {receipt.company.taxId}</div>
+            )}
           </div>
         </div>
 
-        <div className="invoice-title-section">
-          <h2 className="invoice-title">INVOICE</h2>
-          <div className="invoice-number">
-            #{invoice.metadata.invoiceNumber}
+        <div className="receipt-title-section">
+          <h2 className="receipt-title">REC</h2>
+          <div className="receipt-number">
+            #{receipt.metadata.receiptNumber}
           </div>
-          <div className="invoice-date">
-            {formatInvoiceDate(invoice.metadata.issueDate)}
+          <div className="receipt-date">
+            {formatReceiptDate(receipt.metadata.issueDate)}
           </div>
         </div>
       </div>
@@ -40,34 +48,41 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
       <div className="party-info-section">
         <div className="info-box">
           <h3 className="info-header">FROM</h3>
-          <div className="party-name">{invoice.company.name}</div>
-          <div className="wallet-address">{invoice.company.walletAddress}</div>
+          <div className="party-name">{receipt.company.name}</div>
+          <div className="wallet-address">{receipt.company.walletAddress}</div>
           <div className="address-info">
-            <div>{invoice.company.address.street}</div>
-            <div>
-              {invoice.company.address.city}, {invoice.company.address.state}{""}
-              {invoice.company.address.zipCode}
-            </div>
+            {receipt.company.address && (
+              <>
+                <div>{receipt.company.address.street}</div>
+                <div>
+                  {receipt.company.address.city},{""}
+                  {receipt.company.address.state}{""}
+                  {receipt.company.address.postalCode}{""}
+                  {receipt.company.address.country}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         <div className="info-box">
           <h3 className="info-header">TO</h3>
           <div className="party-name">
-            {[invoice.buyer.firstName, invoice.buyer.lastName]
+            {[receipt.buyer.firstName, receipt.buyer.lastName]
               .filter(Boolean)
               .join("") || "Customer"}
           </div>
-          <div className="wallet-address">{invoice.buyer.walletAddress}</div>
-          {invoice.buyer.email && (
-            <div className="email">{invoice.buyer.email}</div>
+          <div className="wallet-address">{receipt.buyer.walletAddress}</div>
+          {receipt.buyer.email && (
+            <div className="email">{receipt.buyer.email}</div>
           )}
-          {invoice.buyer.streetAddress && (
+          {receipt.buyer.address && (
             <div className="address-info">
-              <div>{invoice.buyer.streetAddress}</div>
+              <div>{receipt.buyer.address.street}</div>
               <div>
-                {invoice.buyer.city}, {invoice.buyer.state}{""}
-                {invoice.buyer.postalCode}
+                {receipt.buyer.address.city}, {receipt.buyer.address.state}{""}
+                {receipt.buyer.address.postalCode}{""}
+                {receipt.buyer.address.country}
               </div>
             </div>
           )}
@@ -77,11 +92,11 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
       <div className="payment-info">
         <div>
           <strong>Payment Method:</strong>{""}
-          <span>{`${invoice.payment.currency} on ${invoice.payment.chain}`}</span>
+          <span>{`${receipt.payment.currency} on ${receipt.payment.chain}`}</span>
         </div>
-        {invoice.payment.transactionHash && (
+        {receipt.payment.transactionHash && (
           <div className="transaction-hash">
-            <strong>Transaction:</strong> {invoice.payment.transactionHash}
+            <strong>Transaction:</strong> {receipt.payment.transactionHash}
           </div>
         )}
       </div>
@@ -98,7 +113,7 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
           </tr>
         </thead>
         <tbody>
-          {invoice.items.map((item, index) => (
+          {receipt.items.map((item, index) => (
             <tr
               key={item.id}
               className={index % 2 === 0 ? "row-even" : "row-odd"}
@@ -108,7 +123,7 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
               <td className="right">
                 {formatCryptoAmount(
                   item.unitPrice,
-                  item.currency || invoice.payment.currency,
+                  item.currency || receipt.payment.currency,
                 )}
               </td>
               <td className="center">{item.discount || 0}%</td>
@@ -116,7 +131,7 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
               <td className="right amount">
                 {formatCryptoAmount(
                   item.total,
-                  item.currency || invoice.payment.currency,
+                  item.currency || receipt.payment.currency,
                 )}
               </td>
             </tr>
@@ -126,26 +141,26 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
 
       <div className="totals-section">
         <div className="totals-box">
-          {invoice.totals.totalDiscount > 0 && (
+          {receipt.totals.totalDiscount > 0 && (
             <div className="total-line">
               <span>Discount:</span>
               <span className="total-amount">
                 -
                 {formatCryptoAmount(
-                  invoice.totals.totalDiscount,
-                  invoice.payment.currency,
+                  receipt.totals.totalDiscount,
+                  receipt.payment.currency,
                 )}
               </span>
             </div>
           )}
 
-          {invoice.totals.totalTax > 0 && (
+          {receipt.totals.totalTax > 0 && (
             <div className="total-line">
               <span>Tax:</span>
               <span className="total-amount">
                 {formatCryptoAmount(
-                  invoice.totals.totalTax,
-                  invoice.payment.currency,
+                  receipt.totals.totalTax,
+                  receipt.payment.currency,
                 )}
               </span>
             </div>
@@ -155,8 +170,8 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
             <span>Subtotal:</span>
             <span className="total-amount">
               {formatCryptoAmount(
-                invoice.totals.total,
-                invoice.payment.currency,
+                receipt.totals.total,
+                receipt.payment.currency,
               )}
             </span>
           </div>
@@ -164,15 +179,15 @@ export const InvoicePDFTemplate: FC<{ invoice: InvoiceData }> = ({
           <div className="total-line final">
             <span>TOTAL (USD):</span>
             <span className="total-amount">
-              {formatUSDAmount(invoice.totals.totalUSD)}
+              {formatUSDAmount(receipt.totals.totalUSD)}
             </span>
           </div>
         </div>
       </div>
 
-      {invoice.metadata.notes && (
+      {receipt.metadata.notes && (
         <div className="notes-section">
-          <strong>Notes:</strong> {invoice.metadata.notes}
+          <strong>Notes:</strong> {receipt.metadata.notes}
         </div>
       )}
     </div>

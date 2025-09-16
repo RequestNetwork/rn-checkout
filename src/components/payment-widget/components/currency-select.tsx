@@ -8,7 +8,7 @@ import {
   getConversionCurrencies,
   getSymbolOverride,
   type ConversionCurrency,
-} from "@/lib/currencies";
+} from "../utils/currencies";
 import { Check } from "lucide-react";
 import { usePaymentWidgetContext } from "../context/payment-widget-context";
 

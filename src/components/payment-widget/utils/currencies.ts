@@ -1,4 +1,4 @@
-import { RN_API_URL } from "@/components/payment-widget/constants";
+import { RN_API_URL } from "../constants";
 
 export type ConversionCurrency = {
   id: string;

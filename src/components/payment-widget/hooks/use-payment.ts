@@ -5,8 +5,8 @@ import {
   type PaymentParams,
   type TxParams,
   type PaymentResponse,
-} from "@/lib/payment";
-import type { PaymentError } from "@/types";
+} from "../utils/payment";
+import type { PaymentError } from "../types/index";
 import type { Account, WalletClient } from "viem";
 
 export const usePayment = (walletAccount?: WalletClient) => {
@@ -55,6 +55,7 @@ export const usePayment = (walletAccount?: WalletClient) => {
           recipientWallet: params.recipientWallet,
           paymentCurrency: params.paymentCurrency,
           feeInfo: params.feeInfo,
+          customerInfo: params.customerInfo,
         },
         sendTransaction: wrappedSendTransaction,
       });

@@ -29,7 +29,7 @@ export const CustomizeForm = () => {
   const formValues = watch();
 
   const addInvoiceItem = () => {
-    const currentItems = formValues.invoiceInfo.items;
+    const currentItems = formValues.receiptInfo.items;
     const newItem = {
       id: (currentItems.length + 1).toString(),
       description: "",
@@ -38,26 +38,26 @@ export const CustomizeForm = () => {
       total: 0,
       currency: "USD",
     };
-    setValue("invoiceInfo.items", [...currentItems, newItem]);
+    setValue("receiptInfo.items", [...currentItems, newItem]);
   };
 
   const removeInvoiceItem = (index: number) => {
-    const currentItems = formValues.invoiceInfo.items;
+    const currentItems = formValues.receiptInfo.items;
     if (currentItems.length > 1) {
-      setValue("invoiceInfo.items", currentItems.filter((_, i) => i !== index));
+      setValue("receiptInfo.items", currentItems.filter((_, i) => i !== index));
     }
   };
 
   const updateItemTotal = (index: number) => {
-    const items = formValues.invoiceInfo.items;
+    const items = formValues.receiptInfo.items;
     const item = items[index];
     const total = item.quantity * item.unitPrice;
-    setValue(`invoiceInfo.items.${index}.total`, total);
+    setValue(`receiptInfo.items.${index}.total`, total);
   };
 
   // Auto-calculate totals when items change
   useEffect(() => {
-    const items = formValues.invoiceInfo.items;
+    const items = formValues.receiptInfo.items;
     const subtotal = items.reduce(
       (sum, item) => sum + (item.total || 0),
       0
@@ -69,7 +69,7 @@ export const CustomizeForm = () => {
     const totalTax = items.reduce((sum, item) => sum + (item.tax || 0), 0);
     const total = subtotal - totalDiscount + totalTax;
 
-    setValue("invoiceInfo.totals", {
+    setValue("receiptInfo.totals", {
       totalDiscount,
       totalTax,
       total,
@@ -78,20 +78,30 @@ export const CustomizeForm = () => {
 
     // Update the payment amount
     setValue("amountInUsd", total.toString());
-  }, [formValues.invoiceInfo.items, setValue]);
-
-  // Sync recipient wallet with company wallet address
-  useEffect(() => {
-    if (formValues.invoiceInfo.companyInfo.walletAddress) {
-      setValue("recipientWallet", formValues.invoiceInfo.companyInfo.walletAddress);
-    }
-  }, [formValues.invoiceInfo.companyInfo.walletAddress, setValue]);
+  }, [formValues.receiptInfo.items, setValue]);
 
   return (
     <section className="flex flex-col gap-4">
       <SectionHeader title="Payment Configuration" />
 
-      {/* Network Selection */}
+       <div className="flex flex-col gap-2">
+        <Label className="flex items-center">
+          Recipient Wallet Address
+          <span className="text-red-500 ml-1">*</span>
+        </Label>
+        <Input
+          placeholder="0x1234567890123456789012345678901234567890"
+          {...register("recipientWallet")}
+          className={cn(
+            "border-2",
+            errors.recipientWallet ? "border-red-500" : "border-gray-200"
+          )}
+        />
+        {errors.recipientWallet?.message && (
+          <Error>{errors.recipientWallet.message}</Error>
+        )}
+      </div>
+
       <div className="flex flex-col gap-2">
         <Label className="flex items-center">
           Network
@@ -115,7 +125,6 @@ export const CustomizeForm = () => {
         </Select>
       </div>
 
-      {/* API Client ID */}
       <div className="flex flex-col gap-2">
         <Label className="flex items-center">
           Request Network API Client ID
@@ -134,7 +143,6 @@ export const CustomizeForm = () => {
         )}
       </div>
 
-      {/* WalletConnect Project ID */}
       <div className="flex flex-col gap-2">
         <Label>WalletConnect Project ID (Optional)</Label>
         <Input
@@ -143,7 +151,6 @@ export const CustomizeForm = () => {
         />
       </div>
 
-      {/* Fee Configuration */}
       <div className="flex flex-col gap-2">
         <Label>Fee Address</Label>
         <Input
@@ -159,12 +166,11 @@ export const CustomizeForm = () => {
 
       <SectionHeader title="Invoice Items" />
 
-      {/* Invoice Items */}
-      {formValues.invoiceInfo.items.map((item, index) => (
+      {formValues.receiptInfo.items.map((item, index) => (
         <div key={item.id} className="border rounded-lg p-4 space-y-4">
           <div className="flex justify-between items-center">
             <h4 className="font-medium">Item {index + 1}</h4>
-            {formValues.invoiceInfo.items.length > 1 && (
+            {formValues.receiptInfo.items.length > 1 && (
               <Button
                 type="button"
                 variant="destructive"
@@ -181,7 +187,7 @@ export const CustomizeForm = () => {
               <Label>Description</Label>
               <Input
                 placeholder="Service/Product description"
-                {...register(`invoiceInfo.items.${index}.description`)}
+                {...register(`receiptInfo.items.${index}.description`)}
               />
             </div>
             <div>
@@ -189,7 +195,7 @@ export const CustomizeForm = () => {
               <Input
                 type="number"
                 placeholder="1"
-                {...register(`invoiceInfo.items.${index}.quantity`, {
+                {...register(`receiptInfo.items.${index}.quantity`, {
                   valueAsNumber: true,
                   onChange: () => updateItemTotal(index),
                 })}
@@ -201,7 +207,7 @@ export const CustomizeForm = () => {
                 type="number"
                 step="0.01"
                 placeholder="0.00"
-                {...register(`invoiceInfo.items.${index}.unitPrice`, {
+                {...register(`receiptInfo.items.${index}.unitPrice`, {
                   valueAsNumber: true,
                   onChange: () => updateItemTotal(index),
                 })}
@@ -239,38 +245,36 @@ export const CustomizeForm = () => {
       <div className="flex items-center justify-between">
         <Label>Show Invoice Download</Label>
         <Switch
-          checked={formValues.uiConfig?.showInvoiceDownload || false}
-          onCheckedChange={(checked) => setValue("uiConfig.showInvoiceDownload", checked)}
+          checked={formValues.uiConfig?.showReceiptDownload || false}
+          onCheckedChange={(checked) => setValue("uiConfig.showReceiptDownload", checked)}
         />
       </div>
 
-      {/* Invoice Number */}
       <div className="flex flex-col gap-2">
-        <Label>Invoice Number</Label>
+        <Label>Receipt Number</Label>
         <Input
           placeholder="INV-001"
-          {...register("invoiceInfo.invoiceNumber")}
+          {...register("receiptInfo.invoiceNumber")}
         />
       </div>
 
-      {/* Totals Display */}
       <div className="border-t pt-4">
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span>${formValues.invoiceInfo.totals.total.toFixed(2)}</span>
+            <span>${formValues.receiptInfo.totals.total.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Discount:</span>
-            <span>-${formValues.invoiceInfo.totals.totalDiscount.toFixed(2)}</span>
+            <span>-${formValues.receiptInfo.totals.totalDiscount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Tax:</span>
-            <span>${formValues.invoiceInfo.totals.totalTax.toFixed(2)}</span>
+            <span>${formValues.receiptInfo.totals.totalTax.toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-bold text-lg border-t pt-2">
             <span>Total:</span>
-            <span>${formValues.invoiceInfo.totals.totalUSD.toFixed(2)}</span>
+            <span>${formValues.receiptInfo.totals.totalUSD.toFixed(2)}</span>
           </div>
         </div>
       </div>

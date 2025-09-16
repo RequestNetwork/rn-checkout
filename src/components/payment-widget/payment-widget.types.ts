@@ -1,6 +1,6 @@
-import type { FeeInfo, PaymentError, InvoiceInfo } from "@/types";
 import type { PropsWithChildren } from "react";
 import type { WalletClient } from "viem";
+import type { FeeInfo, ReceiptInfo, PaymentError } from "./types";
 
 export interface PaymentConfig {
   walletConnectProjectId?: string;
@@ -12,7 +12,7 @@ export interface PaymentConfig {
 
 export interface UiConfig {
   showRequestScanUrl?: boolean;
-  showInvoiceDownload?: boolean;
+  showReceiptDownload?: boolean;
 }
 
 /*
@@ -57,8 +57,8 @@ export interface PaymentWidgetProps extends PropsWithChildren {
   paymentConfig: PaymentConfig;
   // UI specific config
   uiConfig?: UiConfig;
-  // Invoice information
-  invoiceInfo: InvoiceInfo;
+  // Receipt information
+  receiptInfo: ReceiptInfo;
   // On success callback when the payment is completed
   onSuccess?: (requestId: string) => void | Promise<void>;
   // On error callback when the payment fails

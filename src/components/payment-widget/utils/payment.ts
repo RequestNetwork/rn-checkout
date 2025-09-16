@@ -1,5 +1,5 @@
-import type { FeeInfo, PaymentError } from "@/types";
-import { RN_API_URL } from "@/components/payment-widget/constants";
+import { RN_API_URL } from "../constants";
+import type { FeeInfo, PaymentError } from "../types";
 
 export interface PaymentParams {
   amountInUsd: string;
@@ -7,6 +7,19 @@ export interface PaymentParams {
   recipientWallet: string;
   paymentCurrency: string;
   feeInfo?: FeeInfo;
+  customerInfo: {
+    // This matches the API spec
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    address?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      postalCode?: string;
+      country?: string;
+    };
+  };
 }
 
 interface PayoutAPITransaction {
@@ -105,6 +118,7 @@ export const createPayout = async (
       paymentCurrency: paymentCurrency,
       feePercentage: feeInfo?.feePercentage || undefined,
       feeAddress: feeInfo?.feeAddress || undefined,
+      customerInfo: params.customerInfo,
     }),
   });
 

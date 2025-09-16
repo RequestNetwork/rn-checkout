@@ -2,10 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { usePayment } from "@/hooks/use-payment";
-import { getSymbolOverride, type ConversionCurrency } from "@/lib/currencies";
+import { usePayment } from "../hooks/use-payment";
+import {
+  getSymbolOverride,
+  type ConversionCurrency,
+} from "../utils/currencies";
 import { usePaymentWidgetContext } from "../context/payment-widget-context";
-import type { BuyerInfo, PaymentError } from "@/types";
+import type { BuyerInfo, PaymentError } from "../types/index";
 
 interface PaymentConfirmationProps {
   selectedCurrency: ConversionCurrency;
@@ -15,6 +18,7 @@ interface PaymentConfirmationProps {
 }
 
 export function PaymentConfirmation({
+  buyerInfo,
   selectedCurrency,
   onBack,
   handlePaymentSuccess,
@@ -24,9 +28,11 @@ export function PaymentConfirmation({
     recipientWallet,
     connectedWalletAddress,
     paymentConfig: { rnApiClientId, feeInfo },
+    receiptInfo: { companyInfo: { name: companyName } = {} },
     onError,
   } = usePaymentWidgetContext();
   const { isExecuting, executePayment } = usePayment();
+  console.log(buyerInfo);
 
   const handleExecutePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +46,20 @@ export function PaymentConfirmation({
         recipientWallet,
         paymentCurrency: selectedCurrency.id,
         feeInfo,
+        customerInfo: {
+          email: buyerInfo.email,
+          firstName: buyerInfo.firstName,
+          lastName: buyerInfo.lastName,
+          address: buyerInfo.address
+            ? {
+                street: buyerInfo.address.street,
+                city: buyerInfo.address.city,
+                state: buyerInfo.address.state,
+                postalCode: buyerInfo.address.postalCode,
+                country: buyerInfo.address.country,
+              }
+            : undefined,
+        },
       });
 
       handlePaymentSuccess(requestId);
@@ -81,12 +101,20 @@ export function PaymentConfirmation({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <h4 className="font-medium">Payment Destination</h4>
-        <div className="p-3 bg-slate-100 rounded-lg dark:bg-slate-800">
-          <span className="text-sm font-mono text-slate-950 dark:text-slate-50">
-            {recipientWallet}
-          </span>
+      <div className="space-y-3">
+        <h4 className="font-medium text-slate-950 dark:text-slate-50">Payment To</h4>
+        <div className="p-4 bg-slate-100 rounded-lg space-y-3 dark:bg-slate-800">
+          <div className="text-base font-semibold text-slate-950 dark:text-slate-50">
+            {companyName}
+          </div>
+          <div className="space-y-1">
+            <div className="text-xs text-slate-500 uppercase tracking-wide dark:text-slate-400">
+              Wallet Address
+            </div>
+            <div className="text-sm font-mono text-slate-950 break-all dark:text-slate-50">
+              {recipientWallet}
+            </div>
+          </div>
         </div>
       </div>
 

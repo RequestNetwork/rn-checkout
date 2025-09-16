@@ -14,8 +14,8 @@ import { PaymentConfirmation } from "./payment-confirmation";
 import { PaymentSuccess } from "./payment-success";
 import { DisconnectWallet } from "./disconnect-wallet";
 import { usePaymentWidgetContext } from "../context/payment-widget-context";
-import type { BuyerInfo } from "@/types";
-import type { ConversionCurrency } from "@/lib/currencies";
+import type { BuyerInfo } from "../types/index";
+import type { ConversionCurrency } from "../utils/currencies";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -26,7 +26,7 @@ export function PaymentModal({
   isOpen,
   handleModalOpenChange,
 }: PaymentModalProps) {
-  const { isWalletOverride, invoiceInfo, onSuccess } =
+  const { isWalletOverride, receiptInfo, onSuccess } =
     usePaymentWidgetContext();
 
   const [activeStep, setActiveStep] = useState<
@@ -38,7 +38,7 @@ export function PaymentModal({
   const [selectedCurrency, setSelectedCurrency] =
     useState<ConversionCurrency | null>(null);
   const [buyerInfo, setBuyerInfo] = useState<BuyerInfo | undefined>(
-    invoiceInfo.buyerInfo || undefined,
+    receiptInfo.buyerInfo || undefined,
   );
   const [requestId, setRequestId] = useState<string>("");
 
@@ -58,8 +58,24 @@ export function PaymentModal({
     await onSuccess?.(requestId);
   };
 
+  const reset = () => {
+    setActiveStep("currency-select");
+    setSelectedCurrency(null);
+    setBuyerInfo(receiptInfo.buyerInfo || undefined);
+    setRequestId("");
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleModalOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(isOpen) => {
+        // reset modal state when closing from success step
+        if (!isOpen && activeStep === "payment-success") {
+          reset();
+        }
+        handleModalOpenChange(isOpen);
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Payment</DialogTitle>

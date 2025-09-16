@@ -21,33 +21,34 @@ export const PlaygroundValidation = z.object({
   // UI config
   uiConfig: z.object({
     showRequestScanUrl: z.boolean().optional(),
-    showInvoiceDownload: z.boolean().optional(),
+    showReceiptDownload: z.boolean().optional(),
   }).optional(),
 
-  // Invoice info
-  invoiceInfo: z.object({
+  // Receipt info
+  receiptInfo: z.object({
     buyerInfo: z.object({
       email: z.string(),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       businessName: z.string().optional(),
       phone: z.string().optional(),
-      streetAddress: z.string().optional(),
-      city: z.string().optional(),
-      state: z.string().optional(),
-      country: z.string().optional(),
-      postalCode: z.string().optional(),
-    }).optional(),
-    companyInfo: z.object({
-      name: z.string().min(1, "Company name is required"),
-      walletAddress: z.string().min(1, "Wallet address is required"),
       address: z.object({
         street: z.string(),
         city: z.string(),
         state: z.string(),
-        zipCode: z.string(),
-        country: z.string().optional(),
-      }),
+        country: z.string(),
+        postalCode: z.string(),
+      }).optional(),
+    }),
+    companyInfo: z.object({
+      name: z.string().min(1, "Company name is required"),
+      address: z.object({
+        street: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postalCode: z.string(),
+        country: z.string(),
+      }).optional(),
       taxId: z.string(),
       email: z.string().optional(),
       phone: z.string().optional(),

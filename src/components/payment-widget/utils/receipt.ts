@@ -1,4 +1,4 @@
-import type { BuyerInfo, CompanyInfo, InvoiceItem } from "@/types";
+import type { BuyerInfo, CompanyInfo, ReceiptItem } from "../types";
 
 export interface PaymentInfo {
   chain: string;
@@ -7,22 +7,26 @@ export interface PaymentInfo {
   transactionHash?: string;
 }
 
-export interface InvoiceMetadata {
-  invoiceNumber: string;
+export interface ReceiptMetadata {
+  receiptNumber: string;
   issueDate: Date;
   notes?: string;
 }
 
-interface InvoiceBuyerInfo extends BuyerInfo {
+interface ReceiptBuyerInfo extends BuyerInfo {
   walletAddress: string;
 }
 
-export interface InvoiceData {
-  company: CompanyInfo;
-  buyer: InvoiceBuyerInfo;
+interface ReceiptCompanyInfo extends CompanyInfo {
+  walletAddress: string;
+}
+
+export interface ReceiptData {
+  company: ReceiptCompanyInfo;
+  buyer: ReceiptBuyerInfo;
   payment: PaymentInfo;
-  items: InvoiceItem[];
-  metadata: InvoiceMetadata;
+  items: ReceiptItem[];
+  metadata: ReceiptMetadata;
   totals: {
     totalDiscount: number;
     totalTax: number;
@@ -31,7 +35,7 @@ export interface InvoiceData {
   };
 }
 
-export const generateInvoiceNumber = (prefix: string = "INV"): string => {
+export const generateReceiptNumber = (prefix: string = "REC"): string => {
   const timestamp = Date.now();
   const random = Math.floor(Math.random() * 1000)
     .toString()
@@ -55,7 +59,7 @@ export const formatCryptoAmount = (
   return `${amount} ${currency}`;
 };
 
-export const formatInvoiceDate = (date: Date): string => {
+export const formatReceiptDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -63,28 +67,27 @@ export const formatInvoiceDate = (date: Date): string => {
   });
 };
 
-export interface CreateInvoiceParams {
-  company: CompanyInfo;
-  buyer: InvoiceBuyerInfo;
+export interface CreateReceiptParams {
+  company: ReceiptCompanyInfo;
+  buyer: ReceiptBuyerInfo;
   payment: PaymentInfo;
-  items: InvoiceItem[];
+  items: ReceiptItem[];
   totals: {
     totalDiscount: number;
     totalTax: number;
     total: number;
     totalUSD: number;
   };
-  metadata?: Partial<InvoiceMetadata>;
+  metadata: Omit<ReceiptMetadata, "issueDate">;
 }
 
-export const createInvoice = (params: CreateInvoiceParams): InvoiceData => {
-  const metadata: InvoiceMetadata = {
-    invoiceNumber: params.metadata?.invoiceNumber || generateInvoiceNumber(),
+export const createReceipt = (params: CreateReceiptParams): ReceiptData => {
+  const metadata: ReceiptMetadata = {
     issueDate: new Date(),
     ...params.metadata,
   };
 
-  const invoice: InvoiceData = {
+  const receipt: ReceiptData = {
     metadata,
     company: params.company,
     buyer: params.buyer,
@@ -93,13 +96,13 @@ export const createInvoice = (params: CreateInvoiceParams): InvoiceData => {
     totals: params.totals,
   };
 
-  return invoice;
+  return receipt;
 };
 
-export const InvoiceUtils = {
-  createInvoice,
-  generateInvoiceNumber,
+export const ReceiptUtils = {
+  createReceipt,
+  generateReceiptNumber,
   formatUSDAmount,
   formatCryptoAmount,
-  formatInvoiceDate,
+  formatReceiptDate,
 } as const;

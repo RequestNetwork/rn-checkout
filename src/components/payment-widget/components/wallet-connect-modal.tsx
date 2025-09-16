@@ -1,6 +1,6 @@
 "use client";
 
-import { useConnect } from "wagmi";
+import { type Connector, useConnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,7 +25,7 @@ export function WalletConnectModal({
 }: WalletConnectModalProps) {
   const { connectors, connect, isPending } = useConnect();
 
-  const handleConnect = (connector: any) => {
+  const handleConnect = (connector: Connector) => {
     connect({ connector });
   };
 

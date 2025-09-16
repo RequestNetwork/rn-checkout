@@ -38,19 +38,11 @@ export const Playground = () => {
       },
       uiConfig: {
         showRequestScanUrl: true,
-        showInvoiceDownload: true,
+        showReceiptDownload: true,
       },
-      invoiceInfo: {
+      receiptInfo: {
         companyInfo: {
           name: "",
-          walletAddress: "",
-          address: {
-            street: "",
-            city: "",
-            state: "",
-            zipCode: "",
-            country: "",
-          },
           taxId: "",
           email: "",
           phone: "",
@@ -62,11 +54,6 @@ export const Playground = () => {
           lastName: "",
           businessName: "",
           phone: "",
-          streetAddress: "",
-          city: "",
-          state: "",
-          country: "",
-          postalCode: "",
         },
         items: [
           {
@@ -102,7 +89,6 @@ export const Playground = () => {
         return JSON.stringify(obj);
       }
       
-      // Handle arrays
       if (Array.isArray(obj)) {
         if (obj.length === 0) return "[]";
         
@@ -118,11 +104,10 @@ export const Playground = () => {
         return `[\n${arrayItems.join(',\n')}\n${spaces}]`;
       }
       
-      // Handle objects
       const entries = Object.entries(obj)
         .filter(([_, value]) => value !== undefined && value !== null && value !== "")
         .map(([key, value]) => {
-          if (typeof value === 'object' && value !== null) {
+          if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
             return `${nextSpaces}${key}: ${formatObject(value, indent + 2)}`;
           }
           return `${nextSpaces}${key}: ${JSON.stringify(value)}`;
@@ -144,42 +129,31 @@ export const Playground = () => {
         : undefined,
     };
 
-    const cleanedInvoiceInfo = {
-      ...formValues.invoiceInfo,
-      buyerInfo: Object.values(formValues.invoiceInfo.buyerInfo || {}).some(val => val)
-        ? formValues.invoiceInfo.buyerInfo
+    const cleanedreceiptInfo = {
+      ...formValues.receiptInfo,
+      buyerInfo: Object.values(formValues.receiptInfo.buyerInfo || {}).some(val => val)
+        ? formValues.receiptInfo.buyerInfo
         : undefined,
     };
 
-    return `import { PaymentWidget } from "./components/payment-widget/payment-widget";
-import type { PaymentError } from "./types";
-
-const App = () => {
-  const handleSuccess = (requestId: string) => {
-    console.log('Payment successful:', requestId);
-  };
-
-  const handleError = (error: PaymentError) => {
+    return `<PaymentWidget
+  amountInUsd="${formValues.amountInUsd}"
+  recipientWallet="${formValues.recipientWallet}"
+  paymentConfig={${formatObject(cleanedPaymentConfig, 2)}}${formValues.uiConfig ? `
+  uiConfig={${formatObject(formValues.uiConfig, 2)}}` : ''}
+  receiptInfo={${formatObject(cleanedreceiptInfo, 2)}}
+  onSuccess={() => {
+    console.log('Payment successful');
+  }}
+  onError={(error) => {
     console.error('Payment failed:', error);
-  };
-
-  return (
-    <PaymentWidget
-      amountInUsd="${formValues.amountInUsd}"
-      recipientWallet="${formValues.recipientWallet}"
-      paymentConfig={${formatObject(cleanedPaymentConfig, 6)}}${formValues.uiConfig ? `
-      uiConfig={${formatObject(formValues.uiConfig, 6)}}` : ''}
-      invoiceInfo={${formatObject(cleanedInvoiceInfo, 6)}}
-      onSuccess={handleSuccess}
-      onError={handleError}
-    >
-      {/* Custom button example */}
-      <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
-        Pay with crypto
-      </div>
-    </PaymentWidget>
-  );
-};`;
+  }}
+>
+  {/* Custom button example */}
+  <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
+    Pay with crypto
+  </div>
+</PaymentWidget>`;
   };
 
   const integrationCode = generateIntegrationCode();
@@ -218,7 +192,7 @@ const App = () => {
               recipientWallet={formValues.recipientWallet}
               paymentConfig={formValues.paymentConfig}
               uiConfig={formValues.uiConfig}
-              invoiceInfo={formValues.invoiceInfo}
+              receiptInfo={formValues.receiptInfo}
               onSuccess={(requestId) => console.log('Payment successful:', requestId)}
               onError={(error) => console.error('Payment failed:', error)}
             >

@@ -1,4 +1,4 @@
-.invoice-container {
+.receipt-container {
   background-color: #ffffff;
   padding: 20px;
   max-width: 800px;
@@ -10,7 +10,7 @@
   color: #2d3748;
 }
 
-.invoice-header {
+.receipt-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -40,25 +40,25 @@
   margin-bottom: 2px;
 }
 
-.invoice-title-section {
+.receipt-title-section {
   text-align: right;
 }
 
-.invoice-title {
+.receipt-title {
   font-size: 28px;
   font-weight: 700;
   color: #2d3748;
   margin: 0 0 4px 0;
 }
 
-.invoice-number {
+.receipt-number {
   font-size: 16px;
   font-weight: 600;
   color: #4a5568;
   margin-bottom: 4px;
 }
 
-.invoice-date {
+.receipt-date {
   font-size: 11px;
   color: #718096;
 }

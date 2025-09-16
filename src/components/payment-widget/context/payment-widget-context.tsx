@@ -2,9 +2,9 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import { useAccount } from "wagmi";
-import type { InvoiceInfo, FeeInfo, PaymentError } from "@/types";
+import type { ReceiptInfo, FeeInfo, PaymentError } from "../types/index";
 import type { WalletClient } from "viem";
-import type { PaymentWidgetProps } from "../types";
+import type { PaymentWidgetProps } from "../payment-widget.types";
 
 export interface PaymentWidgetContextValue {
   amountInUsd: string;
@@ -25,15 +25,14 @@ export interface PaymentWidgetContextValue {
       | "sepolia";
     feeInfo?: FeeInfo;
     supportedCurrencies?: string[];
-    invoiceNumber?: string;
   };
 
   uiConfig: {
     showRequestScanUrl: boolean;
-    showInvoiceDownload: boolean;
+    showReceiptDownload: boolean;
   };
 
-  invoiceInfo: InvoiceInfo;
+  receiptInfo: ReceiptInfo;
 
   onSuccess?: (requestId: string) => void | Promise<void>;
   onError?: (error: PaymentError) => void | Promise<void>;
@@ -53,7 +52,7 @@ interface PaymentWidgetProviderProps {
     "walletConnectProjectId"
   >;
   uiConfig?: PaymentWidgetProps["uiConfig"];
-  invoiceInfo: InvoiceInfo;
+  receiptInfo: ReceiptInfo;
   onSuccess?: (requestId: string) => void | Promise<void>;
   onError?: (error: PaymentError) => void | Promise<void>;
 }
@@ -65,7 +64,7 @@ export function PaymentWidgetProvider({
   walletAccount,
   paymentConfig,
   uiConfig,
-  invoiceInfo,
+  receiptInfo,
   onSuccess,
   onError,
 }: PaymentWidgetProviderProps) {
@@ -87,13 +86,12 @@ export function PaymentWidgetProvider({
       network: paymentConfig.network,
       feeInfo: paymentConfig.feeInfo,
       supportedCurrencies: paymentConfig.supportedCurrencies,
-      invoiceNumber: paymentConfig.invoiceNumber,
     },
     uiConfig: {
-      showInvoiceDownload: uiConfig?.showInvoiceDownload || true,
+      showReceiptDownload: uiConfig?.showReceiptDownload || true,
       showRequestScanUrl: uiConfig?.showRequestScanUrl || true,
     },
-    invoiceInfo,
+    receiptInfo,
     onSuccess,
     onError,
   };

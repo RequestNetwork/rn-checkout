@@ -90,17 +90,16 @@ export function PaymentStep() {
             }}
             uiConfig={{
               showRequestScanUrl: true,
-              showInvoiceDownload: true,
+              showReceiptDownload: true,
             }}
-            invoiceInfo={{
+            receiptInfo={{
               companyInfo: {
                 name: "Event Ticketing Co.",
-                walletAddress: "0xb07D2398d2004378cad234DA0EF14f1c94A530e4",
                 address: {
                   street: "123 Event Street",
                   city: "San Francisco",
                   state: "CA",
-                  zipCode: "94102",
+                  postalCode: "94102",
                   country: "USA",
                 },
                 taxId: "ETC123456789",
@@ -122,7 +121,7 @@ export function PaymentStep() {
               },
               items: invoiceItems,
               totals: invoiceTotals,
-              invoiceNumber: `INV-${Date.now()}`,
+              receiptNumber: `REC-${Date.now()}`,
             }}
             onSuccess={() => {
               clearTickets();
