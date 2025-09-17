@@ -2,7 +2,9 @@ import z from "zod";
 import isEthereumAddress from "validator/lib/isEthereumAddress";
 export const PlaygroundValidation = z.object({
   // Payment basics
-  amountInUsd: z.string().min(1, "Amount is required"),
+  amountInUsd: z.string().trim()
+    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid USD amount (e.g., 10 or 10.50)")
+    .refine((v) => parseFloat(v) > 0, "Amount must be > 0"),,
   recipientWallet: z.string().min(1, "Recipient wallet is required").refine(isEthereumAddress, "Invalid Ethereum address format"),
   
   // Payment config
@@ -11,7 +13,7 @@ export const PlaygroundValidation = z.object({
     rnApiClientId: z.string().min(1, "API Client ID is required"),
     feeInfo: z.object({
       feePercentage: z.string(),
-      feeAddress: z.string(),
+      feeAddress: z.string().refine(isEthereumAddress, "Invalid Ethereum address format"),
     }).optional(),
     supportedCurrencies: z.array(z.string()).min(1, "At least one supported currency is required"),
   }),
