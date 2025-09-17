@@ -1,10 +1,9 @@
 import z from "zod";
-import isEthereumAddress from "validator/lib/isEthereumAddress"; // @TODO add this
-
+import isEthereumAddress from "validator/lib/isEthereumAddress";
 export const PlaygroundValidation = z.object({
   // Payment basics
   amountInUsd: z.string().min(1, "Amount is required"),
-  recipientWallet: z.string().min(1, "Recipient wallet is required"),
+  recipientWallet: z.string().min(1, "Recipient wallet is required").refine(isEthereumAddress, "Invalid Ethereum address format"),
   
   // Payment config
   paymentConfig: z.object({
@@ -26,7 +25,7 @@ export const PlaygroundValidation = z.object({
   // Receipt info
   receiptInfo: z.object({
     buyerInfo: z.object({
-      email: z.string(),
+      email: z.string().email("Invalid email address").optional(),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       businessName: z.string().optional(),
@@ -48,7 +47,7 @@ export const PlaygroundValidation = z.object({
         postalCode: z.string(),
         country: z.string(),
       }).optional(),
-      taxId: z.string(),
+      taxId: z.string().optional(),
       email: z.string().optional(),
       phone: z.string().optional(),
       website: z.string().optional(),

@@ -22,16 +22,16 @@ export function PaymentStep() {
     id: ticket.id || (index + 1).toString(),
     description: ticket.name,
     quantity: ticket.quantity,
-    unitPrice: ticket.price,
-    total: ticket.price * ticket.quantity,
+    unitPrice: ticket.price.toString(),
+    total: (ticket.price * ticket.quantity).toString(),
     currency: "USD",
   }));
 
   const invoiceTotals = {
-    totalDiscount: 0,
-    totalTax: 0,
-    total: total,
-    totalUSD: total,
+    totalDiscount: '0',
+    totalTax: '0',
+    total: total.toString(),
+    totalUSD: total.toString(),
   };
   console.log("ma kaj mona", total, invoiceTotals)
 
@@ -80,7 +80,6 @@ export function PaymentStep() {
             amountInUsd={total.toString()}
             recipientWallet="0xb07D2398d2004378cad234DA0EF14f1c94A530e4"
             paymentConfig={{
-              network: "sepolia",
               rnApiClientId: clientId,
               supportedCurrencies: [
                 "ETH-sepolia-sepolia",
@@ -113,11 +112,13 @@ export function PaymentStep() {
                 lastName: "",
                 businessName: "",
                 phone: "",
-                streetAddress: "",
-                city: "",
-                state: "",  
-                country: "",
-                postalCode: "",
+                address: {
+                  street: "",
+                  city: "",
+                  state: "",  
+                  country: "",
+                  postalCode: "",
+                }
               },
               items: invoiceItems,
               totals: invoiceTotals,
