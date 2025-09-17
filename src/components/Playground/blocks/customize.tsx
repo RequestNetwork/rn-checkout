@@ -8,15 +8,9 @@ import { Label } from "../../ui/label";
 import { SectionHeader } from "../../ui/section-header";
 import { useFormContext } from "react-hook-form";
 import { PlaygroundFormData } from "@/lib/validation";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../ui/select";
 import { Switch } from "../../ui/switch";
 import { useEffect } from "react";
+import { CurrencyCombobox } from "../../ui/combobox";
 
 export const CustomizeForm = () => {
   const {
@@ -34,8 +28,8 @@ export const CustomizeForm = () => {
       id: (currentItems.length + 1).toString(),
       description: "",
       quantity: 1,
-      unitPrice: 0,
-      total: 0,
+      unitPrice: "0",
+      total: "0",
       currency: "USD",
     };
     setValue("receiptInfo.items", [...currentItems, newItem]);
@@ -51,29 +45,43 @@ export const CustomizeForm = () => {
   const updateItemTotal = (index: number) => {
     const items = formValues.receiptInfo.items;
     const item = items[index];
-    const total = item.quantity * item.unitPrice;
-    setValue(`receiptInfo.items.${index}.total`, total);
+    const quantity = typeof item.quantity === 'string' ? parseFloat(item.quantity) || 0 : item.quantity;
+    const unitPrice = typeof item.unitPrice === 'string' ? parseFloat(item.unitPrice) || 0 : item.unitPrice;
+    const total = quantity * unitPrice;
+    setValue(`receiptInfo.items.${index}.total`, total.toString());
   };
 
   // Auto-calculate totals when items change
   useEffect(() => {
     const items = formValues.receiptInfo.items;
-    const subtotal = items.reduce(
-      (sum, item) => sum + (item.total || 0),
-      0
-    );
-    const totalDiscount = items.reduce(
-      (sum, item) => sum + (item.discount || 0),
-      0
-    );
-    const totalTax = items.reduce((sum, item) => sum + (item.tax || 0), 0);
+    const subtotal = items.reduce((sum, item) => {
+      const total = typeof item.total === 'string' ? parseFloat(item.total) || 0 : item.total;
+      return sum + total;
+    }, 0);
+    
+    const totalDiscount = items.reduce((sum, item) => {
+      if (item.discount) {
+        const discount = typeof item.discount === 'string' ? parseFloat(item.discount) || 0 : item.discount;
+        return sum + discount;
+      }
+      return sum;
+    }, 0);
+    
+    const totalTax = items.reduce((sum, item) => {
+      if (item.tax) {
+        const tax = typeof item.tax === 'string' ? parseFloat(item.tax) || 0 : item.tax;
+        return sum + tax;
+      }
+      return sum;
+    }, 0);
+    
     const total = subtotal - totalDiscount + totalTax;
 
     setValue("receiptInfo.totals", {
-      totalDiscount,
-      totalTax,
-      total,
-      totalUSD: total,
+      totalDiscount: totalDiscount.toString(),
+      totalTax: totalTax.toString(),
+      total: total.toString(),
+      totalUSD: total.toString(),
     });
 
     // Update the payment amount
@@ -84,7 +92,7 @@ export const CustomizeForm = () => {
     <section className="flex flex-col gap-4">
       <SectionHeader title="Payment Configuration" />
 
-       <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <Label className="flex items-center">
           Recipient Wallet Address
           <span className="text-red-500 ml-1">*</span>
@@ -100,29 +108,6 @@ export const CustomizeForm = () => {
         {errors.recipientWallet?.message && (
           <Error>{errors.recipientWallet.message}</Error>
         )}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label className="flex items-center">
-          Network
-          <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Select
-          value={formValues.paymentConfig.network}
-          onValueChange={(value) => setValue("paymentConfig.network", value as any)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select network" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="mainnet">Ethereum Mainnet</SelectItem>
-            <SelectItem value="polygon">Polygon</SelectItem>
-            <SelectItem value="arbitrum">Arbitrum</SelectItem>
-            <SelectItem value="base">Base</SelectItem>
-            <SelectItem value="optimism">Optimism</SelectItem>
-            <SelectItem value="sepolia">Sepolia (Testnet)</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -149,6 +134,24 @@ export const CustomizeForm = () => {
           placeholder="your-walletconnect-project-id"
           {...register("paymentConfig.walletConnectProjectId")}
         />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="flex items-center">
+          Supported Currencies
+          <span className="text-red-500 ml-1">*</span>
+        </Label>
+        <CurrencyCombobox
+          register={register}
+          name="paymentConfig.supportedCurrencies"
+          className={cn(
+            "border-2",
+            errors.paymentConfig?.supportedCurrencies ? "border-red-500" : "border-gray-200"
+          )}
+        />
+        {errors.paymentConfig?.supportedCurrencies?.message && (
+          <Error>{errors.paymentConfig.supportedCurrencies.message}</Error>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -208,7 +211,6 @@ export const CustomizeForm = () => {
                 step="0.01"
                 placeholder="0.00"
                 {...register(`receiptInfo.items.${index}.unitPrice`, {
-                  valueAsNumber: true,
                   onChange: () => updateItemTotal(index),
                 })}
               />
@@ -219,7 +221,7 @@ export const CustomizeForm = () => {
                 type="number"
                 step="0.01"
                 readOnly
-                value={item.total || 0}
+                value={typeof item.total === 'string' ? parseFloat(item.total) || 0 : item.total}
                 className="bg-gray-50"
               />
             </div>
@@ -243,7 +245,7 @@ export const CustomizeForm = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <Label>Show Invoice Download</Label>
+        <Label>Show Receipt Download</Label>
         <Switch
           checked={formValues.uiConfig?.showReceiptDownload || false}
           onCheckedChange={(checked) => setValue("uiConfig.showReceiptDownload", checked)}
@@ -253,28 +255,29 @@ export const CustomizeForm = () => {
       <div className="flex flex-col gap-2">
         <Label>Receipt Number</Label>
         <Input
-          placeholder="INV-001"
+          placeholder="REC-001"
           {...register("receiptInfo.invoiceNumber")}
         />
       </div>
 
+      {/* Totals Display */}
       <div className="border-t pt-4">
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span>${formValues.receiptInfo.totals.total.toFixed(2)}</span>
+            <span>${(parseFloat(formValues.receiptInfo.totals.total) || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Discount:</span>
-            <span>-${formValues.receiptInfo.totals.totalDiscount.toFixed(2)}</span>
+            <span>-${(parseFloat(formValues.receiptInfo.totals.totalDiscount) || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Tax:</span>
-            <span>${formValues.receiptInfo.totals.totalTax.toFixed(2)}</span>
+            <span>${(parseFloat(formValues.receiptInfo.totals.totalTax) || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-bold text-lg border-t pt-2">
             <span>Total:</span>
-            <span>${formValues.receiptInfo.totals.totalUSD.toFixed(2)}</span>
+            <span>${(parseFloat(formValues.receiptInfo.totals.totalUSD) || 0).toFixed(2)}</span>
           </div>
         </div>
       </div>

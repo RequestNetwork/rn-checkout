@@ -16,15 +16,8 @@ export interface PaymentWidgetContextValue {
 
   paymentConfig: {
     rnApiClientId: string;
-    network:
-      | "arbitrum"
-      | "base"
-      | "mainnet"
-      | "optimism"
-      | "polygon"
-      | "sepolia";
     feeInfo?: FeeInfo;
-    supportedCurrencies?: string[];
+    supportedCurrencies: string[];
   };
 
   uiConfig: {
@@ -90,7 +83,6 @@ export function PaymentWidgetProvider({
       isWalletOverride,
       paymentConfig: {
         rnApiClientId: paymentConfig.rnApiClientId,
-        network: paymentConfig.network,
         feeInfo: paymentConfig.feeInfo,
         supportedCurrencies: paymentConfig.supportedCurrencies,
       },
@@ -109,7 +101,6 @@ export function PaymentWidgetProvider({
       connectedWalletAddress,
       isWalletOverride,
       paymentConfig.rnApiClientId,
-      paymentConfig.network,
       paymentConfig.feeInfo,
       paymentConfig.supportedCurrencies,
       uiConfig?.showReceiptDownload,

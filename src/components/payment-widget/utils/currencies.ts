@@ -18,12 +18,12 @@ export interface GetConversionCurrenciesResponse {
 
 const DEFAULT_CURRENCY = "USD";
 
+// TODO: optimize to use the new ?networks search param
 export const getConversionCurrencies = async (
   rnApiClientId: string,
-  network: string,
 ): Promise<ConversionCurrency[]> => {
   const response = await fetch(
-    `${RN_API_URL}/v2/currencies/${DEFAULT_CURRENCY}/conversion-routes?network=${network}`,
+    `${RN_API_URL}/v2/currencies/${DEFAULT_CURRENCY}/conversion-routes`,
     {
       headers: {
         "x-client-id": rnApiClientId,

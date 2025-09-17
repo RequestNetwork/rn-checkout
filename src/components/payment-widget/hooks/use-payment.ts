@@ -21,7 +21,7 @@ import { getChainFromNetwork } from "../utils/chains";
 
 export const usePayment = (network: string, walletAccount?: WalletClient) => {
   const [isExecuting, setIsExecuting] = useState(false);
-  const { isConnected: wagmiConnected, address: wagmiAddress } = useAccount();
+  const { isConnected: isWagmiConnected, address: wagmiAddress } = useAccount();
   const { sendTransactionAsync } = useSendTransaction();
   const { switchChainAsync } = useSwitchChain();
   const config = useConfig();
@@ -29,7 +29,7 @@ export const usePayment = (network: string, walletAccount?: WalletClient) => {
   const requiredChain = getChainFromNetwork(network);
   const isConnected = walletAccount
     ? Boolean(walletAccount.account)
-    : wagmiConnected;
+    : isWagmiConnected;
 
   const address = walletAccount ? walletAccount.account?.address : wagmiAddress;
   const isUsingCustomWallet = walletAccount?.account !== undefined;
@@ -38,7 +38,7 @@ export const usePayment = (network: string, walletAccount?: WalletClient) => {
     ? async (transaction: TxParams): Promise<`0x${string}`> => {
         const hash = await walletAccount.sendTransaction({
           account: walletAccount.account as Account,
-          chain: walletAccount.chain,
+          chain: requiredChain,
           to: transaction.to,
           data: transaction.data,
           value: transaction.value,
@@ -54,14 +54,8 @@ export const usePayment = (network: string, walletAccount?: WalletClient) => {
   const wrappedWaitForTransaction: WaitForTransactionFunction =
     isUsingCustomWallet
       ? async (hash: `0x${string}`): Promise<TransactionReceipt> => {
-          if (!walletAccount.chain) {
-            throw {
-              type: "wallet",
-              error: new Error("Wallet isn't connected to any chain"),
-            } as PaymentError;
-          }
           const publicClient = createPublicClient({
-            chain: walletAccount.chain,
+            chain: requiredChain,
             transport: http(),
           });
 
@@ -118,7 +112,5 @@ export const usePayment = (network: string, walletAccount?: WalletClient) => {
   return {
     isExecuting,
     executePayment: execute,
-    isConnected,
-    address,
   };
 };

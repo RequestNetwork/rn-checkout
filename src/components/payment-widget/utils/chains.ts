@@ -17,7 +17,9 @@ export const getChainFromNetwork = (network: string) => {
       return base;
     case "optimism":
       return optimism;
+    // our currencies API uses matic for polygon for the moment
     case "polygon":
+    case "matic":
       return polygon;
     case "sepolia":
       return sepolia;

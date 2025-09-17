@@ -123,7 +123,7 @@ export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({
               <td className="center">{item.quantity}</td>
               <td className="right">
                 {formatCryptoAmount(
-                  item.unitPrice,
+                  item.unitPrice.toString(),
                   item.currency || receipt.payment.currency,
                 )}
               </td>
@@ -131,7 +131,7 @@ export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({
               <td className="center">{item.tax || 0}%</td>
               <td className="right amount">
                 {formatCryptoAmount(
-                  item.total,
+                  item.total.toString(),
                   item.currency || receipt.payment.currency,
                 )}
               </td>
@@ -142,25 +142,25 @@ export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({
 
       <div className="totals-section">
         <div className="totals-box">
-          {receipt.totals.totalDiscount > 0 && (
+          {receipt.totals.totalDiscount.length > 0 && (
             <div className="total-line">
               <span>Discount:</span>
               <span className="total-amount">
                 -
                 {formatCryptoAmount(
-                  receipt.totals.totalDiscount,
+                  receipt.totals.totalDiscount.toString(),
                   receipt.payment.currency,
                 )}
               </span>
             </div>
           )}
 
-          {receipt.totals.totalTax > 0 && (
+          {receipt.totals.totalTax.length > 0 && (
             <div className="total-line">
               <span>Tax:</span>
               <span className="total-amount">
                 {formatCryptoAmount(
-                  receipt.totals.totalTax,
+                  receipt.totals.totalTax.toString(),
                   receipt.payment.currency,
                 )}
               </span>
@@ -171,7 +171,7 @@ export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({
             <span>Subtotal:</span>
             <span className="total-amount">
               {formatCryptoAmount(
-                receipt.totals.total,
+                receipt.payment.amount,
                 receipt.payment.currency,
               )}
             </span>

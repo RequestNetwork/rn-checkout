@@ -18,7 +18,7 @@ interface CurrencySelectProps {
 
 export function CurrencySelect({ onSubmit }: CurrencySelectProps) {
   const {
-    paymentConfig: { rnApiClientId, network, supportedCurrencies },
+    paymentConfig: { rnApiClientId, supportedCurrencies },
   } = usePaymentWidgetContext();
   const [selectedCurrency, setSelectedCurrency] = useState<string>("");
 
@@ -28,8 +28,8 @@ export function CurrencySelect({ onSubmit }: CurrencySelectProps) {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["conversionCurrencies", rnApiClientId, network],
-    queryFn: () => getConversionCurrencies(rnApiClientId, network),
+    queryKey: ["conversionCurrencies", rnApiClientId],
+    queryFn: () => getConversionCurrencies(rnApiClientId),
   });
 
   const handleSubmit = () => {
@@ -60,8 +60,8 @@ export function CurrencySelect({ onSubmit }: CurrencySelectProps) {
     return <div>No conversion currencies available.</div>;
   }
 
-  const lowerCaseSupportedCurrencies = (supportedCurrencies || []).map(
-    (currency) => currency.toLowerCase(),
+  const lowerCaseSupportedCurrencies = supportedCurrencies.map((currency) =>
+    currency.toLowerCase(),
   );
 
   const eligibleCurrencies =

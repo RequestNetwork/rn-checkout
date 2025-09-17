@@ -9,13 +9,12 @@ export const PlaygroundValidation = z.object({
   // Payment config
   paymentConfig: z.object({
     walletConnectProjectId: z.string().optional(),
-    network: z.enum(["arbitrum", "base", "mainnet", "optimism", "polygon", "sepolia"]),
     rnApiClientId: z.string().min(1, "API Client ID is required"),
     feeInfo: z.object({
       feePercentage: z.string(),
       feeAddress: z.string(),
     }).optional(),
-    supportedCurrencies: z.array(z.string()).optional(),
+    supportedCurrencies: z.array(z.string()).min(1, "At least one supported currency is required"),
   }),
 
   // UI config
@@ -58,17 +57,17 @@ export const PlaygroundValidation = z.object({
       id: z.string(),
       description: z.string(),
       quantity: z.number(),
-      unitPrice: z.number(),
-      discount: z.number().optional(),
-      tax: z.number().optional(),
-      total: z.number(),
+      unitPrice: z.string(),
+      discount: z.string().optional(),
+      tax: z.string().optional(),
+      total: z.string(),
       currency: z.string().optional(),
     })),
     totals: z.object({
-      totalDiscount: z.number(),
-      totalTax: z.number(),
-      total: z.number(),
-      totalUSD: z.number(),
+      totalDiscount: z.string(),
+      totalTax: z.string(),
+      total: z.string(),
+      totalUSD: z.string(),
     }),
     invoiceNumber: z.string().optional(),
   }),

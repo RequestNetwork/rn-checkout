@@ -3,6 +3,8 @@ export interface FeeInfo {
   feeAddress: string;
 }
 
+// TODO check out if we want to rework all numbers to strings
+
 export interface PaymentError {
   type: "wallet" | "transaction" | "api" | "unknown";
   error: Error;
@@ -18,10 +20,10 @@ export interface ReceiptItem {
   id: string;
   description: string;
   quantity: number;
-  unitPrice: number;
-  discount?: number;
-  tax?: number;
-  total: number;
+  unitPrice: string;
+  discount?: string;
+  tax?: string;
+  total: string;
   currency?: string;
 }
 
@@ -56,10 +58,10 @@ export interface BuyerInfo {
 }
 
 export interface ReceiptTotals {
-  totalDiscount: number;
-  totalTax: number;
-  total: number;
-  totalUSD: number;
+  totalDiscount: string;
+  totalTax: string;
+  total: string;
+  totalUSD: string;
 }
 
 export interface ReceiptInfo {

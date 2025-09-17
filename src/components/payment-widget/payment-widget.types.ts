@@ -4,10 +4,9 @@ import type { FeeInfo, ReceiptInfo, PaymentError } from "./types";
 
 export interface PaymentConfig {
   walletConnectProjectId?: string;
-  network: "arbitrum" | "base" | "mainnet" | "optimism" | "polygon" | "sepolia";
   rnApiClientId: string;
   feeInfo?: FeeInfo;
-  supportedCurrencies?: string[]; // an array of currency  ids
+  supportedCurrencies: string[]; // an array of currency  ids
 }
 
 export interface UiConfig {

@@ -18,12 +18,35 @@ function PaymentWidgetInner({ children }: PropsWithChildren) {
     setIsModalOpen(open);
   };
 
-  const { walletAccount } = usePaymentWidgetContext();
+  const {
+    walletAccount,
+    paymentConfig: { rnApiClientId, supportedCurrencies },
+  } = usePaymentWidgetContext();
+
+  let isButtonDisabled = false;
+
+  if (!rnApiClientId || rnApiClientId === "") {
+    console.error("PaymentWidget: rnApiClientId is required in paymentConfig");
+
+    isButtonDisabled = true;
+  }
+
+  if (supportedCurrencies.length === 0) {
+    console.error(
+      "PaymentWidget: supportedCurrencies is required in paymentConfig",
+    );
+
+    isButtonDisabled = true;
+  }
 
   return (
     <div className="inline-flex flex-col items-center">
       <Button
-        onClick={() => setIsModalOpen(true)}
+        disabled={isButtonDisabled}
+        onClick={() => {
+          if (isButtonDisabled) return;
+          setIsModalOpen(true);
+        }}
         variant="ghost"
         className="p-0 h-auto bg-transparent hover:bg-transparent"
       >
@@ -74,12 +97,6 @@ export function PaymentWidget({
   walletAccount,
   children,
 }: PaymentWidgetProps) {
-  if (!paymentConfig.rnApiClientId || paymentConfig.rnApiClientId === "") {
-    console.error("PaymentWidget: rnApiClientId is required in paymentConfig");
-
-    return <div>Error: rnApiClientId is required</div>;
-  }
-
   return (
     <Web3Provider walletConnectProjectId={paymentConfig.walletConnectProjectId}>
       <PaymentWidgetProvider

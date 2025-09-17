@@ -2,8 +2,9 @@ import type { BuyerInfo, CompanyInfo, ReceiptItem } from "../types";
 
 export interface PaymentInfo {
   chain: string;
+  amount: string;
   currency: string;
-  exchangeRate: number;
+  exchangeRate: string;
   transactionHash?: string;
 }
 
@@ -28,10 +29,10 @@ export interface ReceiptData {
   items: ReceiptItem[];
   metadata: ReceiptMetadata;
   totals: {
-    totalDiscount: number;
-    totalTax: number;
-    total: number;
-    totalUSD: number;
+    totalDiscount: string;
+    totalTax: string;
+    total: string;
+    totalUSD: string;
   };
 }
 
@@ -43,17 +44,23 @@ export const generateReceiptNumber = (prefix: string = "REC"): string => {
   return `${prefix}-${timestamp}-${random}`;
 };
 
-export const formatUSDAmount = (amount: number): string => {
+export const formatUSDAmount = (amount: string): string => {
+  const numericAmount = parseFloat(amount);
+
+  if (Number.isNaN(numericAmount)) {
+    return "$0.00";
+  }
+
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount);
+  }).format(numericAmount);
 };
 
 export const formatCryptoAmount = (
-  amount: number,
+  amount: string,
   currency: string,
 ): string => {
   return `${amount} ${currency}`;
@@ -73,10 +80,10 @@ export interface CreateReceiptParams {
   payment: PaymentInfo;
   items: ReceiptItem[];
   totals: {
-    totalDiscount: number;
-    totalTax: number;
-    total: number;
-    totalUSD: number;
+    totalDiscount: string;
+    totalTax: string;
+    total: string;
+    totalUSD: string;
   };
   metadata: Omit<ReceiptMetadata, "issueDate">;
 }

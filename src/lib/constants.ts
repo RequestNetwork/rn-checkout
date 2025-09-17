@@ -37,6 +37,7 @@ export const CURRENCY_ID = {
   "ETH-SEPOLIA_SEPOLIA": "ETH-sepolia-sepolia",
   FUSDT_SEPOLIA: "fUSDT-sepolia",
   FUSDC_SEPOLIA: "fUSDC-sepolia",
+  FAU_SEPOLIA: "FAU-sepolia",
   "ETH-ZKSYNC_ZKSYNCERA": "ETH-zksync-zksyncera",
   "ETH-BASE_BASE": "ETH-base-base",
 } as const;
