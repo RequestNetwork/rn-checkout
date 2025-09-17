@@ -15,5 +15,8 @@
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
     "magicui": "@/components/magicui"
+  },
+  "registries": {
+    "@requestnetwork": "https://ui.stage.request.network/r/{name}.json"
   }
 }

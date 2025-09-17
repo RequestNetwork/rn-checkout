@@ -19,7 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CURRENCY_ID } from "@/lib/currencies";
+import { CURRENCY_ID } from "@/lib/constants";
 
 const currencies = Object.entries(CURRENCY_ID).map(([key, value]) => ({
   value: value,

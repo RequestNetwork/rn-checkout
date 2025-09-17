@@ -1,4 +1,4 @@
-import { Playground } from "@/components/Playground";
+import { Playground } from "@/components/Playground/index";
 
 export const metadata = {
   title: "Request Checkout Playground",
