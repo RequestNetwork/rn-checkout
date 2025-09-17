@@ -66,3 +66,13 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          NEXT_PUBLIC_BUILDER_ID: ""
+          NEXT_PUBLIC_GTM_ID: "GTM-XXXXXXXX"
+          NEXT_PUBLIC_WEBSITE_URL: "https://request.network"
+          NEXT_PUBLIC_DOCUMENTATION_URL: "https://docs.request.network/building-blocks/templates/request-checkout"
+          NEXT_PUBLIC_NPM_PACKAGE_URL: "https://www.npmjs.com/package/@requestnetwork/payment-widget"
+          NEXT_PUBLIC_DEMO_URL: "https://calendly.com/mariana-rn/request-network-intro"
+          NEXT_PUBLIC_INTEGRATION_URL: "https://docs.request.network/building-blocks/templates/request-checkout"
+          NEXT_PUBLIC_RN_API_CLIENT_ID: "rn_f6mr53l2yfcdv4sych5adq7gez3avurq"
+          NEXT_PUBLIC_REQUEST_API_URL: "https://api.stage.request.network"
