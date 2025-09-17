@@ -4,7 +4,7 @@ export const PlaygroundValidation = z.object({
   // Payment basics
   amountInUsd: z.string().trim()
     .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid USD amount (e.g., 10 or 10.50)")
-    .refine((v) => parseFloat(v) > 0, "Amount must be > 0"),,
+    .refine((v) => parseFloat(v) > 0, "Amount must be > 0"),
   recipientWallet: z.string().min(1, "Recipient wallet is required").refine(isEthereumAddress, "Invalid Ethereum address format"),
   
   // Payment config
