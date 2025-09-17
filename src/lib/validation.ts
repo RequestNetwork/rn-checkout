@@ -25,7 +25,7 @@ export const PlaygroundValidation = z.object({
   // Receipt info
   receiptInfo: z.object({
     buyerInfo: z.object({
-      email: z.string().email("Invalid email address").optional(),
+      email: z.string().email("Invalid email address"),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       businessName: z.string().optional(),
