@@ -15,12 +15,14 @@ import type { ConversionCurrency } from "../utils/currencies";
 
 interface PaymentSuccessProps {
   requestId: string;
+  txHash: string;
   selectedCurrency: ConversionCurrency;
   buyerInfo: BuyerInfo;
 }
 
 export function PaymentSuccess({
   requestId,
+  txHash,
   selectedCurrency,
   buyerInfo,
 }: PaymentSuccessProps) {
@@ -30,6 +32,7 @@ export function PaymentSuccess({
     connectedWalletAddress,
     receiptInfo,
     uiConfig,
+    paymentConfig: { network },
   } = usePaymentWidgetContext();
   const receiptRef = useRef<HTMLDivElement>(null);
 
@@ -43,10 +46,10 @@ export function PaymentSuccess({
       walletAddress: connectedWalletAddress || "",
     },
     payment: {
-      chain: "ethereum",
+      chain: network,
       currency: selectedCurrency.symbol,
       exchangeRate: 1,
-      transactionHash: "",
+      transactionHash: txHash,
     },
     items: receiptInfo.items,
     totals: receiptInfo.totals,
@@ -108,10 +111,11 @@ export function PaymentSuccess({
               Download Receipt PDF
             </Button>
             <div
+              aria-hidden="true"
               style={{
-                height: 0,
-                width: 0,
-                overflow: "hidden",
+                position: "absolute",
+                left: "-10000px",
+                top: 0,
                 opacity: 0,
                 pointerEvents: "none",
               }}

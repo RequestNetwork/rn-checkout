@@ -1,37 +1,81 @@
 import { useState } from "react";
-import { useAccount, useSendTransaction } from "wagmi";
+import {
+  useAccount,
+  useSendTransaction,
+  useConfig,
+  useSwitchChain,
+} from "wagmi";
+import { waitForTransactionReceipt } from "wagmi/actions";
+import { createPublicClient, http } from "viem";
 import {
   executePayment,
   type PaymentParams,
   type TxParams,
   type PaymentResponse,
+  type SendTransactionFunction,
+  type WaitForTransactionFunction,
 } from "../utils/payment";
 import type { PaymentError } from "../types/index";
-import type { Account, WalletClient } from "viem";
+import type { Account, WalletClient, TransactionReceipt } from "viem";
+import { getChainFromNetwork } from "../utils/chains";
 
-export const usePayment = (walletAccount?: WalletClient) => {
+export const usePayment = (network: string, walletAccount?: WalletClient) => {
   const [isExecuting, setIsExecuting] = useState(false);
   const { isConnected: wagmiConnected, address: wagmiAddress } = useAccount();
   const { sendTransactionAsync } = useSendTransaction();
+  const { switchChainAsync } = useSwitchChain();
+  const config = useConfig();
 
+  const requiredChain = getChainFromNetwork(network);
   const isConnected = walletAccount
     ? Boolean(walletAccount.account)
     : wagmiConnected;
-  const address = walletAccount ? walletAccount.account?.address : wagmiAddress;
 
-  const wrappedSendTransaction =
-    walletAccount?.account !== undefined
-      ? async (transaction: TxParams) => {
-          await walletAccount.sendTransaction({
-            account: walletAccount.account as Account, // we know it's defined here
+  const address = walletAccount ? walletAccount.account?.address : wagmiAddress;
+  const isUsingCustomWallet = walletAccount?.account !== undefined;
+
+  const wrappedSendTransaction: SendTransactionFunction = isUsingCustomWallet
+    ? async (transaction: TxParams): Promise<`0x${string}`> => {
+        const hash = await walletAccount.sendTransaction({
+          account: walletAccount.account as Account,
+          chain: walletAccount.chain,
+          to: transaction.to,
+          data: transaction.data,
+          value: transaction.value,
+        });
+
+        return hash;
+      }
+    : async (tx: TxParams): Promise<`0x${string}`> => {
+        const hash = await sendTransactionAsync(tx);
+        return hash;
+      };
+
+  const wrappedWaitForTransaction: WaitForTransactionFunction =
+    isUsingCustomWallet
+      ? async (hash: `0x${string}`): Promise<TransactionReceipt> => {
+          if (!walletAccount.chain) {
+            throw {
+              type: "wallet",
+              error: new Error("Wallet isn't connected to any chain"),
+            } as PaymentError;
+          }
+          const publicClient = createPublicClient({
             chain: walletAccount.chain,
-            to: transaction.to,
-            data: transaction.data,
-            value: transaction.value,
+            transport: http(),
           });
+
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash,
+          });
+
+          return receipt;
         }
-      : async (tx: TxParams) => {
-          await sendTransactionAsync(tx);
+      : async (hash: `0x${string}`): Promise<TransactionReceipt> => {
+          const receipt = await waitForTransactionReceipt(config, {
+            hash,
+          });
+          return receipt;
         };
 
   const execute = async (
@@ -47,6 +91,12 @@ export const usePayment = (walletAccount?: WalletClient) => {
 
     setIsExecuting(true);
     try {
+      if (isUsingCustomWallet) {
+        await walletAccount.switchChain({ id: requiredChain.id });
+      } else {
+        await switchChainAsync({ chainId: requiredChain.id });
+      }
+
       return await executePayment({
         rnApiClientId,
         paymentParams: {
@@ -58,6 +108,7 @@ export const usePayment = (walletAccount?: WalletClient) => {
           customerInfo: params.customerInfo,
         },
         sendTransaction: wrappedSendTransaction,
+        waitForTransaction: wrappedWaitForTransaction,
       });
     } finally {
       setIsExecuting(false);

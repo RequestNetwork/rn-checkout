@@ -83,8 +83,8 @@ export interface CreateReceiptParams {
 
 export const createReceipt = (params: CreateReceiptParams): ReceiptData => {
   const metadata: ReceiptMetadata = {
-    issueDate: new Date(),
     ...params.metadata,
+    issueDate: new Date(),
   };
 
   const receipt: ReceiptData = {

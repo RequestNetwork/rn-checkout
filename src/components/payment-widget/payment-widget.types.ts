@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import type { WalletClient } from "viem";
+import type { TransactionReceipt, WalletClient } from "viem";
 import type { FeeInfo, ReceiptInfo, PaymentError } from "./types";
 
 export interface PaymentConfig {
@@ -60,7 +60,10 @@ export interface PaymentWidgetProps extends PropsWithChildren {
   // Receipt information
   receiptInfo: ReceiptInfo;
   // On success callback when the payment is completed
-  onSuccess?: (requestId: string) => void | Promise<void>;
+  onSuccess?: (
+    requestId: string,
+    receipts: TransactionReceipt[],
+  ) => void | Promise<void>;
   // On error callback when the payment fails
   onError?: (error: PaymentError) => void | Promise<void>;
 }

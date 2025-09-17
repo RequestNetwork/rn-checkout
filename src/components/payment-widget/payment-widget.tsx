@@ -74,6 +74,12 @@ export function PaymentWidget({
   walletAccount,
   children,
 }: PaymentWidgetProps) {
+  if (!paymentConfig.rnApiClientId || paymentConfig.rnApiClientId === "") {
+    console.error("PaymentWidget: rnApiClientId is required in paymentConfig");
+
+    return <div>Error: rnApiClientId is required</div>;
+  }
+
   return (
     <Web3Provider walletConnectProjectId={paymentConfig.walletConnectProjectId}>
       <PaymentWidgetProvider

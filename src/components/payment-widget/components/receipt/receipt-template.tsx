@@ -5,6 +5,7 @@ import {
   formatReceiptDate,
   type ReceiptData,
 } from "../../utils/receipt";
+// a module.css file doesn't work with html2pdf.js
 import "./styles.css";
 
 export const ReceiptPDFTemplate: FC<{ receipt: ReceiptData }> = ({

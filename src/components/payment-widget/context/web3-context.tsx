@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { getWagmiConfig } from "../utils/wagmi";
-import { useMemo, useRef } from "react";
+import { type ReactNode, useMemo, useRef } from "react";
 
 const queryClient = new QueryClient();
 
@@ -11,7 +11,7 @@ export function Web3Provider({
   children,
   walletConnectProjectId,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   walletConnectProjectId?: string;
 }) {
   // @NOTE this may seem weird, but walletConnect doesn't handle strict mode initializing it twice, so we explicitly use a ref to store the config

@@ -1,3 +1,4 @@
+import { TransactionReceipt } from "viem";
 import { RN_API_URL } from "../constants";
 import type { FeeInfo, PaymentError } from "../types";
 
@@ -45,7 +46,11 @@ export type TxParams = {
   value: bigint;
 };
 
-export type SendTransactionFunction = (tx: TxParams) => Promise<void>;
+export type SendTransactionFunction = (tx: TxParams) => Promise<`0x${string}`>;
+
+export type WaitForTransactionFunction = (
+  hash: `0x${string}`,
+) => Promise<TransactionReceipt>;
 
 export const isPaymentError = (error: any): error is PaymentError => {
   return (
@@ -58,6 +63,11 @@ export const normalizeValue = (
 ): bigint => {
   // ERC20 tokens don't have a bignumber returned
   if (typeof value === "number") {
+    if (!Number.isSafeInteger(value)) {
+      throw new Error(
+        "Unsafe numeric value for tx.value; expected string/hex BigInt.",
+      );
+    }
     return BigInt(value);
   }
 
@@ -69,23 +79,34 @@ export const normalizeValue = (
     return BigInt(value.hex);
   }
 
-  // Fallback to 0 if we can't parse it
   console.warn("Unknown value format, defaulting to 0:", value);
-  return BigInt(0);
+  throw new Error("Unknown value format");
 };
 
 export const executeTransactions = async (
   transactions: PayoutAPITransaction[],
   sendTransaction: SendTransactionFunction,
-): Promise<void> => {
+  waitForTransaction: WaitForTransactionFunction,
+): Promise<TransactionReceipt[]> => {
+  const receipts: TransactionReceipt[] = [];
+
   try {
     for (const tx of transactions) {
-      await sendTransaction({
+      const hash = await sendTransaction({
         to: tx.to as `0x${string}`,
         data: tx.data as `0x${string}`,
         value: normalizeValue(tx.value),
       });
+
+      const receipt = await waitForTransaction(hash);
+      if (receipt.status !== "success") {
+        throw new Error(`Transaction reverted: ${hash}`);
+      }
+
+      receipts.push(receipt);
     }
+
+    return receipts;
   } catch (error) {
     console.error("Transaction execution failed:", error);
     throw { type: "transaction", error: error as Error } as PaymentError;
@@ -127,16 +148,19 @@ export const createPayout = async (
 
 export interface PaymentResponse {
   requestId: string;
+  transactionReceipts: TransactionReceipt[];
 }
 
 export const executePayment = async ({
   paymentParams,
   rnApiClientId,
   sendTransaction,
+  waitForTransaction,
 }: {
   rnApiClientId: string;
   paymentParams: PaymentParams;
   sendTransaction: SendTransactionFunction;
+  waitForTransaction: WaitForTransactionFunction;
 }): Promise<PaymentResponse> => {
   try {
     const response = await createPayout(rnApiClientId, paymentParams);
@@ -158,10 +182,14 @@ export const executePayment = async ({
 
     const data: PayoutAPIResponse = await response.json();
 
-    if (data?.transactions) {
-      await executeTransactions(data.transactions, sendTransaction);
+    if (Array.isArray(data?.transactions) && data.transactions.length > 0) {
+      const transactionReceipts = await executeTransactions(
+        data.transactions,
+        sendTransaction,
+        waitForTransaction,
+      );
 
-      return { requestId: data.requestId };
+      return { requestId: data.requestId, transactionReceipts };
     } else {
       const error = new Error("No transaction data received from backend");
       throw { type: "api", error } as PaymentError;
