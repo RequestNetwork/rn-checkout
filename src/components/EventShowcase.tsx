@@ -72,6 +72,8 @@ export const EventShowcase = ({ events }: EventShowcaseProps) => {
                     src={event.image}
                     alt={event.name}
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute top-4 left-4">
                     <span className="rounded-full bg-[#099C77] px-3 py-1 text-sm font-medium text-white shadow-sm">
