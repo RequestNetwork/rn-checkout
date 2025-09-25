@@ -5,8 +5,8 @@
       "name": "Future of Tech Summit 2024",
       "type": "Conference",
       "featured": true,
-      "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
-      "headerImage": "https://images.unsplash.com/photo-1515187029135-18ee286d815b",
+      "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&q=80&auto=format",
       "dateTime": "2024-09-15T09:00:00",
       "endDateTime": "2024-09-16T18:00:00",
       "location": {
@@ -22,7 +22,7 @@
       "startingPrice": 299,
       "organizer": {
         "name": "TechEvents Global",
-        "logo": "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9",
+        "logo": "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&q=80&auto=format",
         "description": "Leading technology conference organizer since 2010"
       },
       "ticketTiers": [
@@ -54,8 +54,8 @@
       "name": "Summer Rock Festival",
       "type": "Concert",
       "featured": true,
-      "image": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
-      "headerImage": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec",
+      "image": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=1200&q=80&auto=format",
       "dateTime": "2024-07-20T16:00:00",
       "endDateTime": "2024-07-20T23:00:00",
       "location": {
@@ -71,7 +71,7 @@
       "startingPrice": 79,
       "organizer": {
         "name": "Rock Nation Events",
-        "logo": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4",
+        "logo": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80&auto=format",
         "description": "Premier music festival organizer"
       },
       "ticketTiers": [
@@ -103,8 +103,8 @@
       "name": "UX Design Masterclass",
       "type": "Workshop",
       "featured": true,
-      "image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12",
-      "headerImage": "https://images.unsplash.com/photo-1558403194-611308249627",
+      "image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1558403194-611308249627?w=1200&q=80&auto=format",
       "dateTime": "2024-08-05T10:00:00",
       "endDateTime": "2024-08-05T17:00:00",
       "location": {
@@ -120,7 +120,7 @@
       "startingPrice": 199,
       "organizer": {
         "name": "Design Masters",
-        "logo": "https://images.unsplash.com/photo-1557821552-17105176677c",
+        "logo": "https://images.unsplash.com/photo-1557821552-17105176677c?w=100&q=80&auto=format",
         "description": "Expert-led design workshops and courses"
       },
       "ticketTiers": [
@@ -145,8 +145,8 @@
       "name": "Startup Growth Summit",
       "type": "Conference",
       "featured": false,
-      "image": "https://images.unsplash.com/photo-1475721027785-f74eccf877e2",
-      "headerImage": "https://images.unsplash.com/photo-1559223607-a43c990c692c",
+      "image": "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1559223607-a43c990c692c?w=1200&q=80&auto=format",
       "dateTime": "2024-10-10T08:30:00",
       "endDateTime": "2024-10-11T17:00:00",
       "location": {
@@ -162,7 +162,7 @@
       "startingPrice": 249,
       "organizer": {
         "name": "Startup Network EU",
-        "logo": "https://images.unsplash.com/photo-1559223607-a43c990c692c",
+        "logo": "https://images.unsplash.com/photo-1559223607-a43c990c692c?w=100&q=80&auto=format",
         "description": "Europe's leading startup community"
       },
       "ticketTiers": [
@@ -194,8 +194,8 @@
       "name": "Evening of Jazz",
       "type": "Concert",
       "featured": false,
-      "image": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
-      "headerImage": "https://images.unsplash.com/photo-1511192336575-5a79af67a629",
+      "image": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1200&q=80&auto=format",
       "dateTime": "2024-06-30T19:00:00",
       "endDateTime": "2024-06-30T23:00:00",
       "location": {
@@ -211,7 +211,7 @@
       "startingPrice": 59,
       "organizer": {
         "name": "Jazz & Soul Productions",
-        "logo": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
+        "logo": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=100&q=80&auto=format",
         "description": "Authentic jazz experiences since 1990"
       },
       "ticketTiers": [
@@ -243,8 +243,8 @@
       "name": "ETHGlobal Summit",
       "type": "Conference",
       "featured": true,
-      "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0",
-      "headerImage": "https://images.unsplash.com/photo-1642006953663-06f0387f5652",
+      "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1642006953663-06f0387f5652?w=1200&q=80&auto=format",
       "dateTime": "2025-03-15T09:00:00",
       "endDateTime": "2025-03-17T18:00:00",
       "location": {
@@ -260,7 +260,7 @@
       "startingPrice": 399,
       "organizer": {
         "name": "ETHGlobal",
-        "logo": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05",
+        "logo": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=100&q=80&auto=format",
         "description": "Leading Ethereum ecosystem event organizer"
       },
       "ticketTiers": [
@@ -285,8 +285,8 @@
       "name": "Digital Renaissance: NFT Art Festival",
       "type": "Exhibition",
       "featured": false,
-      "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e",
-      "headerImage": "https://images.unsplash.com/photo-1638913662380-9799def8ffb1",
+      "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1638913662380-9799def8ffb1?w=1200&q=80&auto=format",
       "dateTime": "2025-05-20T10:00:00",
       "endDateTime": "2025-05-23T20:00:00",
       "location": {
@@ -302,7 +302,7 @@
       "startingPrice": 89,
       "organizer": {
         "name": "CryptoArt Collective",
-        "logo": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e",
+        "logo": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=100&q=80&auto=format",
         "description": "Bridging traditional and digital art"
       },
       "ticketTiers": [
@@ -327,8 +327,8 @@
       "name": "Mediterranean Food & Wine Festival",
       "type": "Festival",
       "featured": false,
-      "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
-      "headerImage": "https://images.unsplash.com/photo-1507434965515-61832950c743",
+      "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1507434965515-61832950c743?w=1200&q=80&auto=format",
       "dateTime": "2025-06-10T12:00:00",
       "endDateTime": "2025-06-12T22:00:00",
       "location": {
@@ -344,7 +344,7 @@
       "startingPrice": 129,
       "organizer": {
         "name": "Mediterranean Culinary Arts",
-        "logo": "https://images.unsplash.com/photo-1466637574441-749b8f19452f",
+        "logo": "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=100&q=80&auto=format",
         "description": "Celebrating Mediterranean cuisine and culture"
       },
       "ticketTiers": [
@@ -369,8 +369,8 @@
       "name": "DeFi Innovation Summit",
       "type": "Conference",
       "featured": false,
-      "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0",
-      "headerImage": "https://images.unsplash.com/photo-1642006953663-06f0387f5652",
+      "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1642006953663-06f0387f5652?w=1200&q=80&auto=format",
       "dateTime": "2025-09-05T09:00:00",
       "endDateTime": "2025-09-07T18:00:00",
       "location": {
@@ -386,7 +386,7 @@
       "startingPrice": 599,
       "organizer": {
         "name": "DeFi Alliance",
-        "logo": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05",
+        "logo": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=100&q=80&auto=format",
         "description": "Advancing decentralized finance innovation"
       },
       "ticketTiers": [
@@ -411,8 +411,8 @@
       "name": "Wayne Enterprises Annual Charity Gala",
       "type": "Gala",
       "featured": true,
-      "image": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
-      "headerImage": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+      "image": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&q=80&auto=format",
+      "headerImage": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&q=80&auto=format",
       "dateTime": "2025-10-31T19:00:00",
       "endDateTime": "2025-11-01T02:00:00",
       "location": {
@@ -428,7 +428,7 @@
       "startingPrice": 1000,
       "organizer": {
         "name": "Wayne Foundation",
-        "logo": "https://images.unsplash.com/photo-1481819613568-3701cbc70156",
+        "logo": "https://images.unsplash.com/photo-1481819613568-3701cbc70156?w=100&q=80&auto=format",
         "description": "Serving Gotham's community since 1939"
       },
       "ticketTiers": [

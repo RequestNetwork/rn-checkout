@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -69,11 +68,12 @@ export const EventShowcase = ({ events }: EventShowcaseProps) => {
                 aria-label={`View details for ${event.name} on ${format(new Date(event.dateTime), "MMM d, yyyy")}`}
               >
                 <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
-                  <Image
+                  <img
                     src={event.image}
                     alt={event.name}
-                    fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute top-4 left-4">
                     <span className="rounded-full bg-[#099C77] px-3 py-1 text-sm font-medium text-white shadow-sm">
