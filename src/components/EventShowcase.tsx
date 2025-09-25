@@ -69,10 +69,9 @@ export const EventShowcase = ({ events }: EventShowcaseProps) => {
                 aria-label={`View details for ${event.name} on ${format(new Date(event.dateTime), "MMM d, yyyy")}`}
               >
                 <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
-                  <Image
+                  <img
                     src={event.image}
                     alt={event.name}
-                    fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute top-4 left-4">

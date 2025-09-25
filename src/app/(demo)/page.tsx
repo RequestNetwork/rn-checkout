@@ -22,6 +22,7 @@ export default function DemoPage() {
     <>
       <section className="flex flex-col gap-2">
         {/* Featured Events Carousel */}
+        <h1>IMAGE TEST WITH NEXT</h1>
         <div className="mb-8">
           <Carousel
             className="w-full"
@@ -36,10 +37,9 @@ export default function DemoPage() {
                     aria-label={`View details for ${event.name}`}
                   >
                     <div className="relative aspect-[3/1] w-full overflow-hidden rounded-lg">
-                      <Image
+                      <img
                         src={event.headerImage}
                         alt={event.name}
-                        fill
                         className="object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

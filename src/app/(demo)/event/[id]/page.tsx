@@ -26,13 +26,11 @@ export default async function EventDetailsPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative h-[400px] w-full">
-        <Image
+      <div className="relative h-[400px] w-full overflow-hidden">
+        <img
           src={event.headerImage}
           alt={event.name}
-          fill
-          className="object-cover"
-          priority
+          className="object-cover w-full"
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute bottom-8 left-8">
@@ -86,10 +84,9 @@ export default async function EventDetailsPage({
               <h2 className="text-2xl font-semibold mb-4">Organizer</h2>
               <div className="flex items-center gap-4">
                 <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                  <Image
+                  <img
                     src={event.organizer.logo}
                     alt={event.organizer.name}
-                    fill
                     className="object-cover"
                   />
                 </div>
