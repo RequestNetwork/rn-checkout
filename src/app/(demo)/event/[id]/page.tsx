@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { CalendarIcon, MapPinIcon, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { TicketSelector } from "@/components/TicketSelector";

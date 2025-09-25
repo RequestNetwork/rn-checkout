@@ -5,7 +5,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import eventData from "@/const/data.json";
-import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
@@ -22,7 +21,6 @@ export default function DemoPage() {
     <>
       <section className="flex flex-col gap-2">
         {/* Featured Events Carousel */}
-        <h1>IMAGE TEST WITH NEXT</h1>
         <div className="mb-8">
           <Carousel
             className="w-full"

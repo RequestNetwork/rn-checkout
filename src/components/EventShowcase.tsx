@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import { format } from "date-fns";
