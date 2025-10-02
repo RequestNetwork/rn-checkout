@@ -100,6 +100,7 @@ export const usePayment = (network: string, walletAccount?: WalletClient) => {
           paymentCurrency: params.paymentCurrency,
           feeInfo: params.feeInfo,
           customerInfo: params.customerInfo,
+          reference: params.reference,
         },
         sendTransaction: wrappedSendTransaction,
         waitForTransaction: wrappedWaitForTransaction,

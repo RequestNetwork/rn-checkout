@@ -41,3 +41,4 @@ export const CURRENCY_ID = {
   "ETH-ZKSYNC_ZKSYNCERA": "ETH-zksync-zksyncera",
   "ETH-BASE_BASE": "ETH-base-base",
 } as const;
+export const EASY_INVOICE_URL = process.env.NEXT_PUBLIC_EASY_INVOICE_URL || "https://easyinvoice.request.network";
