@@ -2,13 +2,15 @@
 
 import { useTicketStore } from "@/store/ticketStore";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { PaymentWidget } from "./payment-widget/payment-widget";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { EASY_INVOICE_URL } from "@/lib/constants";
 
 export function PaymentStep() {
   const { tickets, clearTickets } = useTicketStore();
   const [total, setTotal] = useState(0);
-  const router = useRouter();
+  const [customClientId, setCustomClientId] = useState("");
 
   useEffect(() => {
     const newTotal = Object.values(tickets).reduce(
@@ -33,9 +35,9 @@ export function PaymentStep() {
     total: total.toString(),
     totalUSD: total.toString(),
   };
-  console.log("ma kaj mona", total, invoiceTotals)
 
-  const clientId = process.env.NEXT_PUBLIC_RN_API_CLIENT_ID;
+  const defaultClientId = process.env.NEXT_PUBLIC_RN_API_CLIENT_ID;
+  const clientId = customClientId || defaultClientId;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -72,9 +74,31 @@ export function PaymentStep() {
         </div>
       </div>
 
-      {/* Payment Widget */}
       <div role="region" aria-label="Payment Widget">
         <h2 className="text-2xl font-semibold mb-6">Payment</h2>
+        <div className="mb-6 space-y-2">
+          <Label htmlFor="custom-client-id">Custom Client ID</Label>
+          <Input
+            id="custom-client-id"
+            type="text"
+            placeholder="Enter your custom client ID"
+            value={customClientId}
+            onChange={(e) => setCustomClientId(e.target.value)}
+            className="w-full"
+          />
+          <p className="text-sm text-gray-600">
+            Get your Client ID on{" "}
+            <a
+              href={`${EASY_INVOICE_URL}/ecommerce/manage`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green hover:text-dark-green underline"
+            >
+              EasyInvoice
+            </a>
+          </p>
+        </div>
+
         {clientId && (
           <PaymentWidget
             amountInUsd={total.toString()}
@@ -126,15 +150,12 @@ export function PaymentStep() {
             }}
             onSuccess={() => {
               clearTickets();
-              setTimeout(() => {
-                router.push("/");
-              }, 10000);
             }}
             onError={(error) => {
               console.error("Payment failed:", error);
             }}
           >
-            <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
+            <div className="px-10 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">
               Pay with crypto
             </div>
           </PaymentWidget>
