@@ -1,4 +1,4 @@
-import { TransactionReceipt } from "viem";
+import type { TransactionReceipt } from "viem";
 import { RN_API_URL } from "../constants";
 import type { FeeInfo, PaymentError } from "../types";
 
@@ -7,6 +7,7 @@ export interface PaymentParams {
   payerWallet: string;
   recipientWallet: string;
   paymentCurrency: string;
+  reference?: string;
   feeInfo?: FeeInfo;
   customerInfo: {
     // This matches the API spec
@@ -52,9 +53,12 @@ export type WaitForTransactionFunction = (
   hash: `0x${string}`,
 ) => Promise<TransactionReceipt>;
 
-export const isPaymentError = (error: any): error is PaymentError => {
+export const isPaymentError = (error: unknown): error is PaymentError => {
   return (
-    error && typeof error === "object" && "type" in error && "error" in error
+    error !== null &&
+    typeof error === "object" &&
+    "type" in error &&
+    "error" in error
   );
 };
 
@@ -123,6 +127,7 @@ export const createPayout = async (
     recipientWallet,
     paymentCurrency,
     feeInfo,
+    reference,
   } = params;
 
   const response = await fetch(`${RN_API_URL}/v2/payouts`, {
@@ -140,6 +145,7 @@ export const createPayout = async (
       feePercentage: feeInfo?.feePercentage || undefined,
       feeAddress: feeInfo?.feeAddress || undefined,
       customerInfo: params.customerInfo,
+      reference,
     }),
   });
 
@@ -171,7 +177,7 @@ export const executePayment = async ({
       try {
         const errorData = await response.json();
         errorMessage = errorData.error || errorData.message || errorMessage;
-      } catch (_parsingError) {
+      } catch {
         // If we can't parse the error response, just use status text
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }

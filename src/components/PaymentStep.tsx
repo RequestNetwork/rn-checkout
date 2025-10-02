@@ -6,11 +6,13 @@ import { PaymentWidget } from "./payment-widget/payment-widget";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { EASY_INVOICE_URL } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 export function PaymentStep() {
   const { tickets, clearTickets } = useTicketStore();
   const [total, setTotal] = useState(0);
   const [customClientId, setCustomClientId] = useState("");
+  const router = useRouter()
 
   useEffect(() => {
     const newTotal = Object.values(tickets).reduce(
@@ -104,6 +106,7 @@ export function PaymentStep() {
             amountInUsd={total.toString()}
             recipientWallet="0xb07D2398d2004378cad234DA0EF14f1c94A530e4"
             paymentConfig={{
+              reference: `ORDER-${Date.now()}`,
               rnApiClientId: clientId,
               supportedCurrencies: [
                 "ETH-sepolia-sepolia",
@@ -148,10 +151,11 @@ export function PaymentStep() {
               totals: invoiceTotals,
               receiptNumber: `REC-${Date.now()}`,
             }}
-            onSuccess={() => {
+            onComplete={() => {
               clearTickets();
+              router.push('/');
             }}
-            onError={(error) => {
+            onPaymentError={(error) => {
               console.error("Payment failed:", error);
             }}
           >

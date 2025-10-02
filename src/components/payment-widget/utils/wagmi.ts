@@ -1,4 +1,4 @@
-import { createConfig, http } from "wagmi";
+import { createConfig, http, type CreateConnectorFn } from "wagmi";
 import {
   arbitrum,
   base,
@@ -16,7 +16,7 @@ import {
 } from "wagmi/connectors";
 
 export const getWagmiConfig = (walletConnectProjectId?: string) => {
-  const connectors = [
+  const connectors: CreateConnectorFn[] = [
     injected(),
     coinbaseWallet({
       appName: "Request Network Payment",
@@ -38,7 +38,7 @@ export const getWagmiConfig = (walletConnectProjectId?: string) => {
         showQrModal: true,
       });
 
-      connectors.push(connector as any);
+      connectors.push(connector);
     } catch (error) {
       console.error("WalletConnect creation failed:", error);
     }

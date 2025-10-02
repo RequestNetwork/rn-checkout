@@ -149,6 +149,14 @@ export const CustomizeForm = () => {
       </div>
 
       <div className="flex flex-col gap-2">
+        <Label>Custom payment reference (Optional)</Label>
+        <Input
+          placeholder="your-custom-payment-reference"
+          {...register("paymentConfig.reference")}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
         <Label className="flex items-center">
           Supported Currencies
           <span className="text-red-500 ml-1">*</span>

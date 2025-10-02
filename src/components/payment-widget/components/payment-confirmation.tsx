@@ -7,10 +7,10 @@ import {
   getSymbolOverride,
   type ConversionCurrency,
 } from "../utils/currencies";
-import { usePaymentWidgetContext } from "../context/payment-widget-context";
 import type { BuyerInfo, PaymentError } from "../types/index";
 import { useState } from "react";
 import type { TransactionReceipt } from "viem";
+import { usePaymentWidgetContext } from "../context/payment-widget-context/use-payment-widget-context";
 
 interface PaymentConfirmationProps {
   selectedCurrency: ConversionCurrency;
@@ -32,9 +32,9 @@ export function PaymentConfirmation({
     amountInUsd,
     recipientWallet,
     connectedWalletAddress,
-    paymentConfig: { rnApiClientId, feeInfo },
+    paymentConfig: { rnApiClientId, feeInfo, reference },
     receiptInfo: { companyInfo: { name: companyName } = {} },
-    onError,
+    onPaymentError,
     walletAccount,
   } = usePaymentWidgetContext();
   const { isExecuting, executePayment } = usePayment(
@@ -58,6 +58,7 @@ export function PaymentConfirmation({
           amountInUsd,
           recipientWallet,
           paymentCurrency: selectedCurrency.id,
+          reference,
           feeInfo,
           customerInfo: {
             email: buyerInfo.email,
@@ -97,7 +98,7 @@ export function PaymentConfirmation({
       }
       setLocalError(errorMessage);
 
-      onError?.(paymentError);
+      onPaymentError?.(paymentError);
     }
   };
 
