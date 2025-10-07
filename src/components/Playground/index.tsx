@@ -142,11 +142,14 @@ export const Playground = () => {
   paymentConfig={${formatObject(cleanedPaymentConfig, 2)}}${formValues.uiConfig ? `
   uiConfig={${formatObject(formValues.uiConfig, 2)}}` : ''}
   receiptInfo={${formatObject(cleanedreceiptInfo, 2)}}
-  onSuccess={() => {
-    console.log('Payment successful');
+  onPaymentSuccess={(requestId) => {
+    console.log('Payment successful', requestId);
   }}
-  onError={(error) => {
+  onPaymentError={(error) => {
     console.error('Payment failed:', error);
+  }}
+  onComplete={() => {
+    console.log('Payment process completed');
   }}
 >
   {/* Custom button example */}
