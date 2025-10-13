@@ -5,12 +5,10 @@ import { Button } from "@/components/ui/button";
 import { ConnectionHandler } from "./components/connection-handler";
 import { Web3Provider } from "./context/web3-context";
 import { PaymentModal } from "./components/payment-modal";
-import {
-  PaymentWidgetProvider,
-  usePaymentWidgetContext,
-} from "./context/payment-widget-context";
+import { PaymentWidgetProvider } from "./context/payment-widget-context/payment-widget-provider";
 import type { PaymentWidgetProps } from "./payment-widget.types";
 import { ICONS } from "./constants";
+import { usePaymentWidgetContext } from "./context/payment-widget-context/use-payment-widget-context";
 
 function PaymentWidgetInner({ children }: PropsWithChildren) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,8 +89,8 @@ export function PaymentWidget({
   recipientWallet,
   paymentConfig,
   receiptInfo,
-  onSuccess,
-  onError,
+  onPaymentSuccess,
+  onPaymentError,
   uiConfig,
   walletAccount,
   children,
@@ -106,8 +104,8 @@ export function PaymentWidget({
         paymentConfig={paymentConfig}
         uiConfig={uiConfig}
         receiptInfo={receiptInfo}
-        onSuccess={onSuccess}
-        onError={onError}
+        onPaymentSuccess={onPaymentSuccess}
+        onPaymentError={onPaymentError}
       >
         <PaymentWidgetInner>{children}</PaymentWidgetInner>
       </PaymentWidgetProvider>

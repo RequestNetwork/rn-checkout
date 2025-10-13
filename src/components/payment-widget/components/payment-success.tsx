@@ -9,9 +9,9 @@ import {
 } from "../utils/receipt";
 import { useRef } from "react";
 import { ReceiptPDFTemplate } from "../components/receipt/receipt-template";
-import { usePaymentWidgetContext } from "../context/payment-widget-context";
 import type { BuyerInfo } from "../types/index";
 import type { ConversionCurrency } from "../utils/currencies";
+import { usePaymentWidgetContext } from "../context/payment-widget-context/use-payment-widget-context";
 
 interface PaymentSuccessProps {
   requestId: string;
@@ -45,7 +45,7 @@ export function PaymentSuccess({
       walletAddress: connectedWalletAddress || "",
     },
     payment: {
-      amount: amountInUsd, // TODO connect to actual payout and exchange rate
+      amount: amountInUsd,
       chain: selectedCurrency.network,
       currency: selectedCurrency.symbol,
       exchangeRate: "1",
@@ -69,18 +69,37 @@ export function PaymentSuccess({
         return;
       }
 
-      const html2pdf = (await import("html2pdf.js")).default;
+      const html2canvas = (await import("html2canvas-pro")).default;
+      const jsPDF = (await import("jspdf")).default;
 
-      html2pdf()
-        .set({
-          margin: 1,
-          filename: `receipt-${receiptParams.metadata?.receiptNumber || "payment"}.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-        })
-        .from(element)
-        .save();
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        width: element.scrollWidth,
+        height: element.scrollHeight,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
+      });
+
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
+
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 10;
+      let imgWidth = pageWidth - margin * 2;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const maxHeight = pageHeight - margin * 2;
+      if (imgHeight > maxHeight) {
+        const ratio = maxHeight / imgHeight;
+        imgWidth = imgWidth * ratio;
+        imgHeight = imgHeight * ratio;
+      }
+      pdf.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
+      pdf.save(
+        `receipt-${receiptParams.metadata?.receiptNumber || "payment"}.pdf`,
+      );
     } catch (error) {
       console.error("Failed to download receipt:", error);
       alert("Failed to download receipt. Please try again.");
@@ -118,6 +137,8 @@ export function PaymentSuccess({
                 top: 0,
                 opacity: 0,
                 pointerEvents: "none",
+                width: "800px",
+                backgroundColor: "white",
               }}
             >
               <div ref={receiptRef}>

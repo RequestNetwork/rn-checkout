@@ -13,10 +13,10 @@ import { BuyerInfoForm } from "./buyer-info-form";
 import { PaymentConfirmation } from "./payment-confirmation";
 import { PaymentSuccess } from "./payment-success";
 import { DisconnectWallet } from "./disconnect-wallet";
-import { usePaymentWidgetContext } from "../context/payment-widget-context";
 import type { BuyerInfo } from "../types/index";
 import type { ConversionCurrency } from "../utils/currencies";
 import type { TransactionReceipt } from "viem";
+import { usePaymentWidgetContext } from "../context/payment-widget-context/use-payment-widget-context";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export function PaymentModal({
   isOpen,
   handleModalOpenChange,
 }: PaymentModalProps) {
-  const { isWalletOverride, receiptInfo, onSuccess } =
+  const { isWalletOverride, receiptInfo, onPaymentSuccess, onComplete } =
     usePaymentWidgetContext();
 
   const [activeStep, setActiveStep] = useState<
@@ -63,7 +63,7 @@ export function PaymentModal({
       transactionReceipts[transactionReceipts.length - 1].transactionHash,
     );
     setActiveStep("payment-success");
-    await onSuccess?.(requestId, transactionReceipts);
+    await onPaymentSuccess?.(requestId, transactionReceipts);
   };
 
   const reset = () => {
@@ -80,6 +80,7 @@ export function PaymentModal({
         // reset modal state when closing from success step
         if (!isOpen && activeStep === "payment-success") {
           reset();
+          onComplete?.();
         }
         handleModalOpenChange(isOpen);
       }}

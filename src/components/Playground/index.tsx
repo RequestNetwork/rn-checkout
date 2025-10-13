@@ -27,6 +27,7 @@ export const Playground = () => {
       amountInUsd: "0",
       recipientWallet: "",
       paymentConfig: {
+        reference: undefined,
         walletConnectProjectId: undefined,
         rnApiClientId: "YOUR_CLIENT_ID_HERE",
         supportedCurrencies: [],
@@ -141,11 +142,14 @@ export const Playground = () => {
   paymentConfig={${formatObject(cleanedPaymentConfig, 2)}}${formValues.uiConfig ? `
   uiConfig={${formatObject(formValues.uiConfig, 2)}}` : ''}
   receiptInfo={${formatObject(cleanedreceiptInfo, 2)}}
-  onSuccess={() => {
-    console.log('Payment successful');
+  onPaymentSuccess={(requestId) => {
+    console.log('Payment successful', requestId);
   }}
-  onError={(error) => {
+  onPaymentError={(error) => {
     console.error('Payment failed:', error);
+  }}
+  onComplete={() => {
+    console.log('Payment process completed');
   }}
 >
   {/* Custom button example */}
@@ -192,8 +196,9 @@ export const Playground = () => {
               paymentConfig={formValues.paymentConfig}
               uiConfig={formValues.uiConfig}
               receiptInfo={formValues.receiptInfo}
-              onSuccess={(requestId) => console.log('Payment successful:', requestId)}
-              onError={(error) => console.error('Payment failed:', error)}
+              onPaymentSuccess={(requestId) => console.log('Payment successful:', requestId)}
+              onPaymentError={(error) => console.error('Payment failed:', error)}
+              onComplete={() => console.log('Payment process completed')}
             >
               <div className="px-8 py-2 bg-[#099C77] text-white rounded-lg hover:bg-[#087f63] transition-colors text-center">Pay with crypto</div>
             </PaymentWidget>

@@ -10,6 +10,7 @@ export const PlaygroundValidation = z.object({
   // Payment config
   paymentConfig: z.object({
     walletConnectProjectId: z.string().optional(),
+    reference: z.string().optional(),
     rnApiClientId: z.string().min(1, "API Client ID is required"),
     feeInfo: z.object({
       feePercentage: z.string(),

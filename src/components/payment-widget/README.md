@@ -74,8 +74,8 @@ function App() {
           totalTax: 0.00,
         },
       }}
-      onSuccess={(requestId, transactionReceipts) => console.log("Payment successful:", requestId, transactionReceipts)}
-      onError={(error) => console.error("Payment failed:", error)}
+      onPaymentSuccess={(requestId, transactionReceipts) => console.log("Payment successful:", requestId, transactionReceipts)}
+      onPaymentError={(error) => console.error("Payment failed:", error)}
     />
   );
 }
@@ -212,11 +212,11 @@ function App() {
 
 ### Event Handlers
 
-#### `onSuccess` (optional)
+#### `onPaymentSuccess` (optional)
 - **Type**: `(requestId: string) => void | Promise<void>`
 - **Description**: Callback function called when payment is successfully completed. Receives the Request Network request ID.
 
-#### `onError` (optional)
+#### `onPaymentError` (optional)
 - **Type**: `(error: PaymentError) => void | Promise<void>`
 - **Description**: Callback function called when payment fails. Receives detailed error information.
 
@@ -232,6 +232,35 @@ function App() {
     Pay Now
   </button>
 </PaymentWidget>
+```
+
+## PaymentWidget Props
+
+### onComplete
+Optional callback that fires when the user closes the payment widget from the success screen. Use this to handle post-payment cleanup or navigation.
+
+```tsx
+<PaymentWidget
+  // ... other props
+  onComplete={() => {
+    // Close modal, redirect user, etc.
+    console.log("Payment flow completed");
+  }}
+/>
+```
+
+### PaymentConfig.reference
+Optional string to associate with the payment request for your own tracking purposes. This reference will be stored with the Request Network payment data.
+
+```tsx
+<PaymentWidget
+  paymentConfig={{
+    rnApiClientId: "your-client-id",
+    reference: "invoice-12345", // Your internal reference
+    supportedCurrencies: ["ETH-sepolia-sepolia"]
+  }}
+  // ... other props
+/>
 ```
 
 ## Styling and Theming
@@ -280,8 +309,8 @@ function PaymentWithExistingWallet() {
       receiptInfo={{
         // ... your receipt info
       }}
-      onSuccess={(requestId) => console.log("Payment successful:", requestId)}
-      onError={(error) => console.error("Payment failed:", error)}
+      onPaymentSuccess={(requestId) => console.log("Payment successful:", requestId)}
+      onPaymentError={(error) => console.error("Payment failed:", error)}
     >
       Pay with My Connected Wallet
     </PaymentWidget>
@@ -333,7 +362,7 @@ The widget includes comprehensive error handling for common scenarios:
 - **Invalid wallet addresses**
 - **API rate limiting**
 
-All errors are passed to the `onError` callback with detailed error information for debugging and user feedback.
+All errors are passed to the `onPaymentError` callback with detailed error information for debugging and user feedback.
 
 ## Browser Support
 

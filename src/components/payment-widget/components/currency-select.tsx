@@ -10,7 +10,7 @@ import {
   type ConversionCurrency,
 } from "../utils/currencies";
 import { Check } from "lucide-react";
-import { usePaymentWidgetContext } from "../context/payment-widget-context";
+import { usePaymentWidgetContext } from "../context/payment-widget-context/use-payment-widget-context";
 
 interface CurrencySelectProps {
   onSubmit: (currency: ConversionCurrency) => void;

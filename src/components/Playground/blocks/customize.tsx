@@ -11,6 +11,7 @@ import { PlaygroundFormData } from "@/lib/validation";
 import { Switch } from "../../ui/switch";
 import { useEffect } from "react";
 import { CurrencyCombobox } from "../../ui/combobox";
+import { EASY_INVOICE_URL } from "@/lib/constants";
 
 export const CustomizeForm = () => {
   const {
@@ -126,6 +127,17 @@ export const CustomizeForm = () => {
         {errors.paymentConfig?.rnApiClientId?.message && (
           <Error>{errors.paymentConfig.rnApiClientId.message}</Error>
         )}
+        <p className="text-sm text-gray-600">
+          Get your Client ID on{" "}
+          <a
+            href={`${EASY_INVOICE_URL}/ecommerce/manage`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green hover:text-dark-green underline"
+          >
+            EasyInvoice
+          </a>
+        </p>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -133,6 +145,14 @@ export const CustomizeForm = () => {
         <Input
           placeholder="your-walletconnect-project-id"
           {...register("paymentConfig.walletConnectProjectId")}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Custom payment reference (Optional)</Label>
+        <Input
+          placeholder="your-custom-payment-reference"
+          {...register("paymentConfig.reference")}
         />
       </div>
 
