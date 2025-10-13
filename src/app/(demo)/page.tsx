@@ -5,7 +5,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import eventData from "@/const/data.json";
-import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
@@ -36,10 +35,9 @@ export default function DemoPage() {
                     aria-label={`View details for ${event.name}`}
                   >
                     <div className="relative aspect-[3/1] w-full overflow-hidden rounded-lg">
-                      <Image
+                      <img
                         src={event.headerImage}
                         alt={event.name}
-                        fill
                         className="object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
