@@ -78,7 +78,7 @@ export const Navbar = () => {
           target="_blank"
           href={process.env.NEXT_PUBLIC_DEMO_URL as string}
         >
-          Book a demo
+          Get in touch
         </Link>
       </Button>
     </div>
